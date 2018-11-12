@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>sjsu.cloud.cohort10</groupId>
-	<artifactId>Avengers_Cloud_Project_2</artifactId>
+	<artifactId>Business_Card_Reader</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>Avengers_Cloud_Project_2</name>
-	<description>Avengers_Cloud_Project_2</description>
+	<name>Business_Card_Reader</name>
+	<description>Business_Card_Reader</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -60,17 +60,27 @@
 		<version>2.6.3</version>
 	</dependency>
 	
-	<dependency>
-    <groupId>edu.stanford.nlp</groupId>
-    <artifactId>stanford-corenlp</artifactId>
-    <version>3.6.0</version>
+	 <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.5</version>
+        </dependency> 
+        
+    <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
 </dependency>
+
 <dependency>
-    <groupId>edu.stanford.nlp</groupId>
-    <artifactId>stanford-corenlp</artifactId>
-    <version>3.6.0</version>
-    <classifier>models</classifier>
-</dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
 
 <dependency>
             <groupId>org.webjars</groupId>

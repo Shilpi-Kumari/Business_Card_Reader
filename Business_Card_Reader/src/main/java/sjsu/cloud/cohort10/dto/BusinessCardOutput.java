@@ -1,6 +1,7 @@
 package sjsu.cloud.cohort10.dto;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class BusinessCardOutput implements Serializable{
 	
@@ -10,6 +11,9 @@ public class BusinessCardOutput implements Serializable{
 	private String organization = null;
 	private String emailId = null;
 	private String contactNumber = null;
+	private String fileName;
+	private String fileDescription;
+	private Timestamp createdTime;
 	
 	public String getContactName() {
 		return contactName;
@@ -35,5 +39,23 @@ public class BusinessCardOutput implements Serializable{
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
-
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getFileDescription() {
+		return fileDescription;
+	}
+	public void setFileDescription(String fileDescription) {
+		this.fileDescription = fileDescription;
+	}
+	public Timestamp getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(Timestamp createdTime) {
+		this.createdTime = createdTime;
+	}
+	
 }
