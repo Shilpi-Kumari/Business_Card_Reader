@@ -12,8 +12,8 @@ public class UserSignInRequest implements Serializable {
 	private String password;
 	private String securityQ1 = null;
 	private String securityQ2 = null;
-	private String securityQ3 = null;
-	
+	private String securityV1 = null;
+	private String securityV2 = null;
 
 	public UserSignInRequest() {
 	}
@@ -66,12 +66,20 @@ public class UserSignInRequest implements Serializable {
 		this.securityQ2 = securityQ2;
 	}
 
-	public String getSecurityQ3() {
-		return securityQ3;
+	public String getSecurityV1() {
+		return securityV1;
 	}
 
-	public void setSecurityQ3(String securityQ3) {
-		this.securityQ3 = securityQ3;
+	public void setSecurityV1(String securityV1) {
+		this.securityV1 = securityV1;
 	}
-	
+
+	public String getSecurityV2() {
+		return securityV2;
+	}
+
+	public void setSecurityV2(String securityV2) {
+		this.securityV2 = securityV2;
+	}
+
 }
