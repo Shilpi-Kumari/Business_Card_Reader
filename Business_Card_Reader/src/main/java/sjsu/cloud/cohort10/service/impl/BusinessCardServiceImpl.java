@@ -3,6 +3,9 @@ package sjsu.cloud.cohort10.service.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
@@ -21,8 +24,11 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
+import sjsu.cloud.cohort10.dao.BusinessCardDAO;
+import sjsu.cloud.cohort10.dto.BusinessCardInput;
 import sjsu.cloud.cohort10.dto.BusinessCardOutput;
-import sjsu.cloud.cohort10.dto.GenericFileResponse;
+import sjsu.cloud.cohort10.dto.UserLoginRequest;
+import sjsu.cloud.cohort10.dto.UserSignInRequest;
 import sjsu.cloud.cohort10.helper.AWSDetectTextRekognitionHelper;
 import sjsu.cloud.cohort10.service.BusinessCardService;
 
@@ -45,13 +51,16 @@ public class BusinessCardServiceImpl implements BusinessCardService
     @Autowired
     AWSDetectTextRekognitionHelper rekognitionHelper;
     
+    @Autowired
+    BusinessCardDAO businessCardDAO;
+    
     @Async
-    public GenericFileResponse uploadBusinessCardToS3(MultipartFile multipartFile, String firstName, String lastName, String emailId, 
+    public Map<String, String> uploadBusinessCardToS3(MultipartFile multipartFile, String emailId, 
     		String fileName, String fileDescription, boolean enablePublicReadAccess) throws ValidationException
     {
         String uploadFileName = multipartFile.getOriginalFilename();
         
-        GenericFileResponse response = null;
+        Map<String, String> outputMap = new HashMap<>();
 
         try {
             File file = new File(uploadFileName);
@@ -69,14 +78,57 @@ public class BusinessCardServiceImpl implements BusinessCardService
             this.amazonS3.putObject(putObjectRequest);
             
             //call helper class to detect text
-            BusinessCardOutput businessCardOutput = rekognitionHelper.detectText(this.awsS3AudioBucket, key);
+            BusinessCardInput businessCardInput = rekognitionHelper.detectText(this.awsS3AudioBucket, key);
+            //set the file name and file description values
+            businessCardInput.setFileName(fileName);
+            businessCardInput.setFileDescription(fileDescription);
+            businessCardInput.setEmailId(emailId);
+            
+            //call the private method to set the business card values to DB
+            outputMap = insertCardDetails(businessCardInput);
             
             file.delete();
             
         } catch (IOException | AmazonServiceException ex) {
             logger.error("error [" + ex.getMessage() + "] occurred while uploading [" + uploadFileName + "] ");
         }
-		return response;
+		return outputMap;
     }
+    
+    private Map<String, String> insertCardDetails(BusinessCardInput businessCardInput) {
+    	
+    	//logic to insert the card details into DB
+    	Map<String, String> outputMap = businessCardDAO.insertCardDetails(businessCardInput);
+		return outputMap;
+    	
+    }
+    
+    @Override
+	public Map<String, String> newUserSignInRequest(UserSignInRequest userRequest) {
+		
+    	//logic to create user in DB
+    	Map<String, String> outputMap = businessCardDAO.createUser(userRequest);
+		return outputMap;
+	}
+    
+    @Override
+	public Map<String,String> userLogin(UserLoginRequest userLoginRequest){
+    	
+    	//logic to get the user details to verify login information
+    	Map<String, String> outputMap = businessCardDAO.getUserDetails(userLoginRequest);
+		return outputMap;
+	}
+
+	@Override
+	public List<BusinessCardOutput> getUserFiles(String emailId) {
+		List<BusinessCardOutput> businessCardList = businessCardDAO.getUserFiles(emailId);
+		return businessCardList;
+	}
+
+	@Override
+	public Map<String, String> updateFileDescription(String emailId, String fileName, String fileDescription) {
+		Map<String, String> outputMap = businessCardDAO.updateFileDescription(emailId, fileName, fileDescription);
+		return outputMap;
+	}
     
 }

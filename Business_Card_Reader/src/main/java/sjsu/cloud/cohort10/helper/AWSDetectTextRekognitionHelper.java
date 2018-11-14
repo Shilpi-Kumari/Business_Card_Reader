@@ -24,13 +24,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import sjsu.cloud.cohort10.dto.AnalyzeRekognitionOutput;
-import sjsu.cloud.cohort10.dto.BusinessCardOutput;
+import sjsu.cloud.cohort10.dto.BusinessCardInput;
 
 
 @Component
 public class AWSDetectTextRekognitionHelper {
 	
-	public BusinessCardOutput detectText (String bucketName, String filePath) throws JsonProcessingException {
+	public BusinessCardInput detectText (String bucketName, String filePath) throws JsonProcessingException {
 	
       AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.defaultClient();
 
@@ -42,7 +42,7 @@ public class AWSDetectTextRekognitionHelper {
     
       Integer contactNbrParentId = 0;
       Integer i=0;
-      BusinessCardOutput businessCardOutput = new BusinessCardOutput();
+      BusinessCardInput businessCardInput = new BusinessCardInput();
 
       try {
          DetectTextResult result = rekognitionClient.detectText(request);
@@ -81,7 +81,7 @@ public class AWSDetectTextRekognitionHelper {
         	 {
         		 if (text.getDetectedText().contains("@") && text.getDetectedText().contains("."))
         		 {
-        			 businessCardOutput.setEmailId(text.getDetectedText());
+        			 businessCardInput.setContactEmailId(text.getDetectedText());
         		 }
         		 
         		 //logic to get various formats of phone numbers in business cards
@@ -91,17 +91,17 @@ public class AWSDetectTextRekognitionHelper {
         				text.getDetectedText().contains(" ")) && text.getParentId() == contactNbrParentId)
         		 {
         			 if (i==2) {
-        				 String tempContactNumber = businessCardOutput.getContactNumber();
-        				 businessCardOutput.setContactNumber(tempContactNumber + text.getDetectedText());
+        				 String tempContactNumber = businessCardInput.getContactNumber();
+        				 businessCardInput.setContactNumber(tempContactNumber + text.getDetectedText());
         				 i++;
         			 }
         			 if (i==1) {
-        				 String tempContactNumber = businessCardOutput.getContactNumber();
-        				 businessCardOutput.setContactNumber(tempContactNumber + text.getDetectedText());
+        				 String tempContactNumber = businessCardInput.getContactNumber();
+        				 businessCardInput.setContactNumber(tempContactNumber + text.getDetectedText());
         				 i++;
         			 }
         			 if (i == 0) {
-        				 businessCardOutput.setContactNumber(text.getDetectedText());
+        				 businessCardInput.setContactNumber(text.getDetectedText());
         				 i++;
         			 }
         		 }
@@ -113,16 +113,16 @@ public class AWSDetectTextRekognitionHelper {
          String output = mapper.writeValueAsString(rekognitionOutputList);
          
          //logic to call the AWS Comprehend API
-         analyzeDetectedText(output, businessCardOutput);
+         analyzeDetectedText(output, businessCardInput);
          
       } catch(AmazonRekognitionException e) {
          e.printStackTrace();
       }
-	return businessCardOutput;
+	return businessCardInput;
 }
 	
 	//method to analyze the card information using AWS comprehend
-	public BusinessCardOutput analyzeDetectedText (String analyzeInput, BusinessCardOutput businessCardOutput) {
+	public BusinessCardInput analyzeDetectedText (String analyzeInput, BusinessCardInput businessCardInput) {
 		
 		
 		
@@ -145,15 +145,15 @@ public class AWSDetectTextRekognitionHelper {
         	{
         		if (!(entityValues.getText().contains("@")))
         		{
-        			businessCardOutput.setContactName(entityValues.getText());
+        			businessCardInput.setContactName(entityValues.getText());
         		}
         	}
         	if (entityValues.getType().equalsIgnoreCase("ORGANIZATION"))
 			{
-        		businessCardOutput.setOrganization(entityValues.getText());
+        		businessCardInput.setOrganization(entityValues.getText());
 			}
         }
-		return businessCardOutput;
+		return businessCardInput;
 	}
 
 }

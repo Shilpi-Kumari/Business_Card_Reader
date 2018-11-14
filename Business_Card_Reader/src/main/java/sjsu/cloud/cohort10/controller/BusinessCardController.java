@@ -1,8 +1,12 @@
 package sjsu.cloud.cohort10.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import sjsu.cloud.cohort10.dto.GenericFileResponse;
+import sjsu.cloud.cohort10.dto.BusinessCardOutput;
+import sjsu.cloud.cohort10.dto.UserLoginRequest;
+import sjsu.cloud.cohort10.dto.UserSignInRequest;
 import sjsu.cloud.cohort10.service.BusinessCardService;
 
 @RestController
@@ -19,28 +25,82 @@ public class BusinessCardController {
     @Autowired
     private BusinessCardService businessCardService;
 
-    //upload business card image
+    //upload business card image and store the card information in DB
     @RequestMapping(value = "/uploadBusinessCardToS3", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ResponseEntity<GenericFileResponse> uploadBusinessCardToS3(
+	public Map<String, String> uploadBusinessCardToS3(
 			@RequestParam(value = "file", required = true) MultipartFile file,
-			@RequestParam(value = "firstName", required = true) String firstName,
-			@RequestParam(value = "lastName", required = true) String lastName,
 			@RequestParam(value = "emailId", required = true) String emailId,
 			@RequestParam(value = "fileName", required = true) String fileName,
 			@RequestParam(value = "fileDescription", required = true) String fileDescription) {
 
-		ResponseEntity<GenericFileResponse> responseEntity = null;
+    	Map<String, String> responseMap = null;
 		try {
-			GenericFileResponse response = this.businessCardService.uploadBusinessCardToS3(file, firstName, lastName, emailId, fileName, fileDescription, true);
-			responseEntity = new ResponseEntity<GenericFileResponse>(response, HttpStatus.OK);
+			responseMap = this.businessCardService.uploadBusinessCardToS3(file, emailId, fileName, fileDescription, true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			responseEntity = new ResponseEntity<GenericFileResponse>(new GenericFileResponse(e.getMessage()),
-					HttpStatus.EXPECTATION_FAILED);
 		}
 
-		return responseEntity;
+		return responseMap;
 	}
     
+    //update file description in DB
+    @RequestMapping(value = "/updateFileDescription", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public Map<String, String> updateFileDescription(
+			@RequestParam(value = "emailId", required = true) String emailId,
+			@RequestParam(value = "fileName", required = true) String fileName,
+			@RequestParam(value = "fileDescription", required = true) String fileDescription) {
+
+    	Map<String, String> responseMap = null;
+		try {
+			responseMap = this.businessCardService.updateFileDescription(emailId, fileName, fileDescription);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return responseMap;
+	}
+    
+    //User sign up request mapping
+    @RequestMapping(value = "/userSignUp", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public Map<String, String> userSignUp(@RequestBody UserSignInRequest userSignUpRequest) {
+    	Map<String, String> responseMap = null;
+		try {
+			responseMap = this.businessCardService.newUserSignInRequest(userSignUpRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return responseMap;
+	}
+    
+    //User login in request mapping
+    @RequestMapping(value = "/userLogin", method = RequestMethod.POST, produces = "application/json")
+   	@ResponseBody
+   	public Map<String, String> userLogin(@RequestBody UserLoginRequest userLoginRequest) {
+    	Map<String, String> responseMap = null;
+   		try {
+   			responseMap = this.businessCardService.userLogin(userLoginRequest);
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
+   		return responseMap;
+   	}
+    
+    //get the list of business card information for the user
+    @RequestMapping(value = "/getUserFiles", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<List<BusinessCardOutput>> getUserFiles(@RequestParam String emailId) {
+    	ResponseEntity<List<BusinessCardOutput>> responseEntity = null;
+		try {
+			
+			List<BusinessCardOutput> businessCardOutputList = this.businessCardService.getUserFiles(emailId);
+			responseEntity = new ResponseEntity<List<BusinessCardOutput>>(businessCardOutputList, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			responseEntity = new ResponseEntity<List<BusinessCardOutput>>(HttpStatus.EXPECTATION_FAILED);
+		}
+		return responseEntity;
+	}
 }
