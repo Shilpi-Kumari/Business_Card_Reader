@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+<meta name="google-signin-client_id" content="741734147837-194sho9o3mgage552qfg48lor7bkcmcc.apps.googleusercontent.com">
+
+
+<style>
+
+
+.left { width: 39%; float:left; test-align:left; display:inline; margin-left:30px;}
+.right { width: 39%; float:center; margin-right:10px; text-align:left; display:inline; }
+.right1 { width: 39%; float:right; text-align:left; margin-right:80px; display:inline; }
+.containerdiv { width: 80%; margin:auto;}
+
+.btn {
+    background-color: DodgerBlue;
+    border: none;
+    color: red;
+    padding: 7px 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+    background-color: RoyalBlue;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: Center;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+/*table {
+    width:100%;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 15px;
+    text-align: center;
+}*/
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+   background-color: #fff;
+}
+table#t01 th {
+    background-color: #DB7093;
+    color: white;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+<script>
+
+function deleteFile(file_id){
+	var account_id = document.cookie.replace(/(?:(?:^|.*;\s*)account_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	$('#spinner').show();
+	$.ajax({
+        url: "accounts/"+account_id+"/files/"+file_id,
+        type: 'DELETE',
+        success :function(data) {
+        document.getElementById('error').innerHTML="File deleted successfully...!!";
+          display_table();
+          $('#spinner').hide();
+       }
+    });
+};
+
+function logout(){
+	var account_id = document.cookie.replace(/(?:(?:^|.*;\s*)account_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	document.cookie = "firstname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "lastname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "emailid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "account_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+};
+
+
+function updateFile(description){
+	document.getElementById('description').value=decodeURIComponent(description);
+    document.getElementById('user_file').focus();
+}
+
+function display_table(){
+	var account_id = document.cookie.replace(/(?:(?:^|.*;\s*)account_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var firstname = document.cookie.replace(/(?:(?:^|.*;\s*)firstname\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var lastname = document.cookie.replace(/(?:(?:^|.*;\s*)lastname\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var role = document.cookie.replace(/(?:(?:^|.*;\s*)role\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	document.getElementById('description').value="";
+    document.getElementById('user_file').value="";
+	$.ajax({
+        url: "accounts/"+account_id+"/files",
+        type: 'GET',
+        success :function(data) {
+        	$("#t01").find("tr:not(:first)").remove();
+        	$.each(data,function(key, val) {
+        		 var table = document.getElementById("t01");
+                 var row = table.insertRow(-1);
+                 var cell0 = row.insertCell(0);
+                 var cell1 = row.insertCell(1);
+                 var cell2 = row.insertCell(2);
+                 var cell3 = row.insertCell(3);
+                 var cell4 = row.insertCell(4);
+                 var cell5 = row.insertCell(5);
+                 var cell6 = row.insertCell(6);
+                 cell0.innerHTML = val.name;
+                 cell1.innerHTML = val.description;
+                 cell2.innerHTML = val.uploadtime;
+                 cell3.innerHTML = val.updatetime;
+                 cell4.innerHTML = "<a href=http://"+encodeURI(val.cf_url)+"><i class='fa fa-download' style='font-size:36px;color:green'></i></a>";
+                 cell5.innerHTML = "<a href=javascript:void(0) onClick=deleteFile('"+val.id+"')><i class='fa fa-trash' style='font-size:36px;color:red'></i></a>";
+                 cell6.innerHTML = "<a href=javascript:void(0) onClick=updateFile('"+encodeURIComponent(val.description)+"')><i class='fa fa-edit' style='font-size:36px;color:blue'></i></a>";
+                //TODO
+        });
+        	var t = document.getElementById('displayUser');
+        	var x = document.getElementById("myDIV");
+        	var fl="Welcome "+firstname+" "+lastname;
+        	t.value=fl;
+        	if(role=="admin"){document.getElementById("displayUser").innerHTML='Welcome Admin ' + firstname +" "+lastname;
+        	 x.style.display = "block";
+        	}
+        	else {document.getElementById("displayUser").innerHTML='Welcome ' + firstname +" "+lastname;
+        	 x.style.display = "none";
+        	}
+       }
+    });
+}
+
+$(document).ready(function () {
+	$('#spinner').hide();
+	display_table()
+});
+
+$(function() {
+    $("#upload_file").submit(function(e) {
+    	e.preventDefault();
+    	var formData = new FormData(this); 
+    	var emailid = document.cookie.replace(/(?:(?:^|.*;\s*)emailid\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    	$('#spinner').show();
+        $.ajax({
+            url: "accounts/"+emailid+"/files/upload",
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+        	data: formData,
+            success :function(data) {
+            	var json = JSON.stringify(data);
+            	//alert(data.reason);
+            	document.getElementById('error').innerHTML=data.reason;
+            	display_table();
+            	$('#spinner').hide();
+              }
+        });
+    });
+});
+
+</script>
+<div class="w3-container w3-cyan">
+<div align='left'><span style="color:white;font-size:150%" id='displayUser'></span></div>
+<div align='right'> 
+<a href=index.html onClick=logout() class="btn btn-info btn-lg">
+          <span class="glyphicon glyphicon-log-out"></span> Log out
+ </a>
+
+</div>
+</div>
+<br>
+<!-- <div id="myDIV" align=right>
+<input style="color:white;text-align:center;background-color:green;" type="button" onclick="location.href='admin.html';" value="Swtich to Admin View" />
+
+</div> -->
+
+	 <form id="upload_file" method="post" enctype="multipart/form-data">
+	 		<p id='error' style="color:green;"></p>
+  			<input type="file" name="user_file" id="user_file" required><input type="text" name="description" id="description" placeholder="Comments"><button>Upload File</button>
+	</form>
+
+	<div id="spinner">
+
+		<img src="ajax-loader.gif" />
+
+	</div>
+<br>
+<table style="width:100%" id="t01">
+  <tr>
+    <th>Name</th>
+    <th>Description</th> 
+    <th>Created Time</th>
+    <th>Updated Time</th>
+    <th>Download</th>
+    <th>Delete</th>
+    <th>Update</th>
+  </tr>
+</table>
+
+</body>
+
+</html>

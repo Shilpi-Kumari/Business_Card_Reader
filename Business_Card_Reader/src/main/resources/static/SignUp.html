@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+ <!--background: url(background.jpeg);-->	
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* style the container */
+.container {
+  position: relative;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px 0 30px 0;
+  height:700px;
+  width: 40%;
+} 
+
+/* style inputs and link buttons */
+input,
+.btn {
+  width: 150%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none; /* remove underline from anchors */
+}
+
+input:hover,
+.btn:hover {
+  opacity: 1;
+}
+
+
+
+/* style the submit button */
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+/* style the back button */
+input[type=button] {
+  background-color: pink;
+  color: white;
+  cursor: pointer;
+}
+
+input[type=button]:hover {
+  background-color: blue;
+}
+
+/* Two-column layout */
+.col {
+  float: center;
+  width: 60%;
+  margin: auto;
+  padding: 0 50px;
+  margin-top: 6px;
+  margin-left: 50px;
+}
+.col1 {
+  float: left;
+  width: 100%;
+  margin: auto;
+  padding: 0 50px;
+  margin-top: 6px;
+  margin-left: 4px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* vertical line */
+.vl {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  border: 2px solid #ddd;
+  height: 175px;
+}
+
+/* text inside the vertical line */
+.vl-innertext {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  padding: 8px 10px;
+}
+
+/* hide some text on medium and large screens */
+.hide-md-lg {
+  display: none;
+}
+
+/* bottom container */
+.bottom-container {
+  text-align: center;
+  background-color: #666;
+  border-radius: 0px 0px 4px 4px;
+  height:55px;
+  width: 40%;
+}
+
+/* Responsive layout - when the screen is less than 650px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 650px) {
+  .col {
+    width: 100%;
+    margin-top: 0;
+  }
+  /* hide the vertical line */
+  .vl {
+    display: none;
+  }
+  /* show the hidden text on small screens */
+  .hide-md-lg {
+    display: block;
+    text-align: center;
+  }
+}
+</style>
+
+</head>
+
+<body>
+<script>      
+
+var check = function() {
+	  if (document.getElementById('password').value ==
+	    document.getElementById('confirm_password').value) {
+	    document.getElementById('message').style.color = 'green';
+	    document.getElementById('message').innerHTML = 'matching';
+	  } else {
+	    document.getElementById('message').style.color = 'red';
+	    document.getElementById('message').innerHTML = 'not matching';
+	  }
+	}
+
+$(function() {
+    $("#create_user").submit(function(e) {
+    	var userSignUpRequest = {
+    			"firstName": $('#firstName').val(),
+    			"lastName": $('#lastName').val(),
+    			"emailId": $('#emailId').val(),
+    			"password": $('#password').val(),
+    			"securityQ1": $('#securityQ1').val(),
+    			"securityQ2": $('#securityQ2').val()		
+    	}
+        $.ajax({
+            url: "/userSignUp",
+            type: 'POST',
+            contentType : 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify(userSignUpRequest),
+            success :function(data) {
+                var json = JSON.stringify(data);
+                alert(json);
+                if(data.status=="true"){
+                	document.getElementById('error').innerHTML="Sign Up is Successfull..!! Click back button to login";
+                	document.getElementById('firstName').value="";
+                	document.getElementById('lastName').value="";
+                	document.getElementById('emailId').value="";
+                	document.getElementById('password').value="";
+                	//alert("Sign Up is Successfull..!!");
+          		 	//window.location.href = "Index.html";
+                }
+                else{
+                	document.getElementById('error').innerHTML="Email Id is already registered.";
+                	//alert("Email id is already registered,login to use the application");
+                	//window.location.href = "/index.html";
+                };
+              }
+        });
+    });
+});
+</script>	
+<form id="create_user" method="post" enctype='application/json'>
+	<div align='center'>
+	<h1 align=center style="color:white;font-family:courier;font-size:400%;">WELCOME TO FILE VAULT</h1>	
+    <div class="container">
+    <div class="row">
+      <h1 style="text-align:center;color:green">Sign Up Here!!</h1>
+	  <p id='error' style="color:red;"></p>
+      <div class="col">
+		<input type="text" name="firstname" id="firstName" placeholder="First Name" required >
+  			<input type="text" name="lastname" id="lastName" placeholder="Last Name" required>
+  			<input type="email" name="emailid" id="emailId" placeholder="Email Id" required>
+  			<input type="password" name="password" id="password"  placeholder="Password" onkeyup='check();' required>
+  			<input type="password" name="confirm_password" id="confirm_password"  placeholder="Confirm Password" onkeyup='check();' required>
+  			<span id='message'></span>
+  			<select>
+  				<option value="">Select First Security Question</option>
+ 				<option value="Q1">In what city or town was your first job?</option>
+ 			    <option value="Q2">Where were you when you first heard about 9/11?</option>
+				<option value="Q3">What is the name of your favorite childhood friend?</option>
+				<option value="Q3">What was your dream job as a child?</option> 
+		    </select>
+		    <input type="text" name="securityQ1" id="securityQ1" required >
+		    <select>
+  				<option value="">Select First Security Question</option>
+ 				<option value="Q1">In what city or town was your first job?</option>
+ 			    <option value="Q2">Where were you when you first heard about 9/11?</option>
+				<option value="Q3">What is the name of your favorite childhood friend? </option>
+				<option value="Q3">What was your dream job as a child?</option>
+		    </select>
+		    <input type="text" name="securityQ2" id="securityQ2" required >
+        <input type="submit" value="Submit">
+        <input type="button" value="Back to login page" onclick="window.location.href = 'Index.html';">
+      </div>
+      
+    </div>
+  
+	</div>
+	</div>
+</form>
+</body>
+
+</html>
