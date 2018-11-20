@@ -1,91 +1,30 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Add icon library -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Add icon library -->
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
-<meta name="google-signin-client_id" content="741734147837-194sho9o3mgage552qfg48lor7bkcmcc.apps.googleusercontent.com">
-
-
-<style>
-
-
-.left { width: 39%; float:left; test-align:left; display:inline; margin-left:30px;}
-.right { width: 39%; float:center; margin-right:10px; text-align:left; display:inline; }
-.right1 { width: 39%; float:right; text-align:left; margin-right:80px; display:inline; }
-.containerdiv { width: 80%; margin:auto;}
-
-.btn {
-    background-color: DodgerBlue;
-    border: none;
-    color: red;
-    padding: 7px 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-/* Darker background on mouse-over */
-.btn:hover {
-    background-color: RoyalBlue;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-    text-align: Center;
-}
-
-th, td {
-    text-align: left;
-    padding: 8px;
-}
-
-tr:nth-child(even){background-color: #f2f2f2}
-
-th {
-    background-color: #4CAF50;
-    color: white;
-}
-/*table {
-    width:100%;
-}
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 15px;
-    text-align: center;
-}*/
-table#t01 tr:nth-child(even) {
-    background-color: #eee;
-}
-table#t01 tr:nth-child(odd) {
-   background-color: #fff;
-}
-table#t01 th {
-    background-color: #DB7093;
-    color: white;
-}
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+        
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+  </style>
 </head>
-
 <body>
+
 <script>
 
 function deleteFile(file_id){
@@ -121,9 +60,10 @@ function display_table() {
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var emailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-	document.getElementById('description').value="";
-    document.getElementById('file').value="";
+	//document.getElementById('description').value="";
+    //document.getElementById('file').value="";
 	document.getElementById("displayUser").innerHTML='Welcome ' + firstName +" "+lastName;
+	//$("#t01").remove();
 	$.ajax({
 		type: 'GET',
 		url: '/getUserFiles',
@@ -133,16 +73,19 @@ function display_table() {
 			var jsonData = JSON.parse(jsonResponse);
 			var display_data = "";
 			for (var i = 0; i < jsonData.length; i++) {
-				display_data += '<tr>';
-				display_data += '<td>' + jsonData[i].contactName + '</td>';
-				display_data += '<td>' + jsonData[i].contactEmailId + '</td>';
-				display_data += '<td>' + jsonData[i].contactNumber + '</td>';
-				display_data += '<td>' + jsonData[i].organization + '</td>';
-				display_data += '<td>' + jsonData[i].fileDescription + '</td>';
+				display_data += '<div class="col-sm-4">';
+				display_data += '<div class="well">';
+				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
+				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
+				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
+				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
+				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
 				//display_data += '<td><button class="download_button" id="' + jsonData[i].fileName + '" type="button" onclick="download(event)">Download</button></td>';
 				//display_data += '<td><button class="edit_button" id="' + jsonData[i].fileName + '" type="button" onclick="edit(event)">Edit</button></td>';
 				//display_data += '<td><button class="delete_button" id="' + jsonData[i].fileName + '" type="button" onclick="deleteFile(event)">Delete</button></td>';
 				//display_data += '</tr>';
+				display_data += '</div>';
+				display_data += '</div>';
 			}
 			$('#t01').append(display_data);
 		},
@@ -186,7 +129,8 @@ $(function() {
             success :function(data) {
             	var json = JSON.stringify(data);
             	//alert(data.reason);
-            	document.getElementById('error').innerHTML=data.reason;
+            	if(data.status=="true")
+            	{document.getElementById('error').innerHTML="File Uploaded Successfully...!!!";}
             	display_table();
             	$('#spinner').hide();
               }
@@ -195,44 +139,66 @@ $(function() {
 });
 
 </script>
-<div class="w3-container w3-cyan">
-<div align='left'><span style="color:white;font-size:150%" id='displayUser'></span></div>
-<div align='right'> 
-<a href=index.html onClick=logout() class="btn btn-info btn-lg">
+
+<nav class="navbar navbar-inverse visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+      
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Dashboard</a></li>
+        <li><a href="#">Age</a></li>
+        <li><a href="#">Gender</a></li>
+        <li><a href="#">Geo</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav hidden-xs">
+      <h3>Business Card Directory</h3>
+      <div align='left'><span style="font-size:150%" id='displayUser'></span></div>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#section1">Dashboard</a></li>
+        <li><a href="#section2">Profile</a></li>
+        <li><a href="#section3">List of cards</a></li>
+        <li><a href="#section3">Update</a></li>
+        <li><a href=index.html onClick=logout()>
           <span class="glyphicon glyphicon-log-out"></span> Log out
- </a>
-
-</div>
-</div>
-<br>
-<!-- <div id="myDIV" align=right>
-<input style="color:white;text-align:center;background-color:green;" type="button" onclick="location.href='admin.html';" value="Swtich to Admin View" />
-
-</div> -->
-
-	 <form id="upload_file" method="post" enctype="multipart/form-data">
+	 </a></li>
+      </ul><br>
+    </div>
+    <br>
+    
+    <div class="col-sm-9">
+      <div class="well">
+        <h4>Upload Card Here:</h4>
+        <form id="upload_file" method="post" enctype="multipart/form-data">
 	 		<p id='error' style="color:green;"></p>
   			<input type="file" name="file" id="file" required><input type="text" name="description" id="description" placeholder="Comments"><button>Upload File</button>
 	</form>
 
 	<div id="spinner">
-
 		<img src="ajax-loader.gif" />
-
 	</div>
-<br>
-<table style="width:100%" id="t01">
-  <tr>
-    <th>Card Holder Name</th>
-    <th>Email</th>
-    <th>Mobile</th>
-    <th>Organization</th>
-    <th>Comments</th> 
-    <th>Download Card</th>
-    <th>Delete Card</th>
-  </tr>
-</table>
+	
+      </div>
+      <div class="row" id="t01">
+        
+      </div>
+   
+    </div>
+  </div>
+</div>
 
 </body>
-
 </html>

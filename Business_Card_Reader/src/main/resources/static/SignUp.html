@@ -169,13 +169,16 @@ var check = function() {
 
 $(function() {
     $("#create_user").submit(function(e) {
+    	e.preventDefault();
     	var userSignUpRequest = {
     			"firstName": $('#firstName').val(),
     			"lastName": $('#lastName').val(),
     			"emailId": $('#emailId').val(),
     			"password": $('#password').val(),
     			"securityQ1": $('#securityQ1').val(),
-    			"securityQ2": $('#securityQ2').val()		
+    			"securityQ2": $('#securityQ2').val(),
+    			"securityV1": $('#securityV1').val(),
+    			"securityV2": $('#securityV2').val()	
     	}
         $.ajax({
             url: "/userSignUp",
@@ -219,7 +222,7 @@ $(function() {
   			<input type="password" name="password" id="password"  placeholder="Password" onkeyup='check();' required>
   			<input type="password" name="confirm_password" id="confirm_password"  placeholder="Confirm Password" onkeyup='check();' required>
   			<span id='message'></span>
-  			<select>
+  			<select id="securityV1">
   				<option value="">Select First Security Question</option>
  				<option value="Q1">In what city or town was your first job?</option>
  			    <option value="Q2">Where were you when you first heard about 9/11?</option>
@@ -227,7 +230,7 @@ $(function() {
 				<option value="Q3">What was your dream job as a child?</option> 
 		    </select>
 		    <input type="text" name="securityQ1" id="securityQ1" required >
-		    <select>
+		    <select id="securityV2">
   				<option value="">Select First Security Question</option>
  				<option value="Q1">In what city or town was your first job?</option>
  			    <option value="Q2">Where were you when you first heard about 9/11?</option>

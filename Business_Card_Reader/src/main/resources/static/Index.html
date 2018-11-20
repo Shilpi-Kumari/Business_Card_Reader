@@ -21,7 +21,7 @@
 <style>
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: url(background.jpeg);
+ <!-- background: url(background.jpeg);-->
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -168,14 +168,14 @@ function onSignIn(googleUser) {
 		  $.ajax({
 	          url: "social/login",
 	          type: 'POST',
-	      	  data: jQuery.param({ 'emailid': profile.getEmail(), 'fname' : profile.getGivenName(), 'lname' : profile.getFamilyName()}),
+	      	  data: jQuery.param({ 'emailId': profile.getEmail(), 'fname' : profile.getGivenName(), 'lname' : profile.getFamilyName()}),
 	          success :function(data) {
 	              var json = JSON.stringify(data);
 	              if(data.status=="true"){
 	              	document.cookie="firstname="+data.fname;
 	              	document.cookie="lastname="+data.lname;
 	                	document.cookie="account_id="+data.account_id;
-	                	document.cookie="emailid="+data.emailid;
+	                	document.cookie="emailId="+data.emailId;
 	                	document.cookie="role="+data.role; 
 	                	window.location.href = "/home.html";
 	              }
@@ -199,24 +199,33 @@ function clickGoogleLogin(){
 $(function() {
     $("#login").submit(function(e) {
     	e.preventDefault();
-    	var datastring = $(this).serialize();
+    	var userLoginRequest = {
+    			"emailId": $('#emailId').val(),
+    			"password": $('#password').val()
+    	}
         $.ajax({
             url: "/userLogin",
             type: 'POST',
-        	data: datastring,
+            dataType: 'json',
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify(userLoginRequest),
             success :function(data) {
                 var json = JSON.stringify(data);
                 if(data.status=="true"){
-                	document.cookie="firstname="+data.firstname;
-                	document.cookie="lastname="+data.lastname;
-                  	document.cookie="emailid="+data.emailid;
-                  	window.location.href = "/Home.html";
+                	document.cookie="firstName="+data.firstname;
+                	document.cookie="lastName="+data.lastname;
+                  	document.cookie="emailId="+data.emailid;
+                  	window.location.href = "Home1.html";
                 }
                 else{
                 	document.getElementById('error').innerHTML="User does not exist";
-                	document.getElementById('emailid').value="";
+                	document.getElementById('emailId').value="";
                 	document.getElementById('password').value="";
                 }
+           },
+           error: function(error){
+         	  var errorjson = JSON.stringify(error); 
+               alert("Invalid Username/password");            	  
            }
         });
     });
@@ -274,14 +283,14 @@ function facebookLogin() {
     	$.ajax({
 	          url: "social/login",
 	          type: 'POST',
-	      	  data: jQuery.param({ 'emailid': response.email, 'fname' : response.first_name, 'lname' : response.last_name}),
+	      	  data: jQuery.param({ 'emailId': response.email, 'fname' : response.first_name, 'lname' : response.last_name}),
 	          success :function(data) {
 	              var json = JSON.stringify(data);
 	              if(data.status=="true"){
 	              	document.cookie="firstname="+data.fname;
 	              	document.cookie="lastname="+data.lname;
 	                	document.cookie="account_id="+data.account_id;
-	                	document.cookie="emailid="+data.emailid;
+	                	document.cookie="emailId="+data.emailId;
 	                	document.cookie="role="+data.role; 
 	                	window.location.href = "/home.html";
 	              }
@@ -301,14 +310,14 @@ function onSuccess(data) {
 	$.ajax({
         url: "social/login",
         type: 'POST',
-    	  data: jQuery.param({ 'emailid': user.emailAddress, 'fname' : user.firstName, 'lname' : user.lastName}),
+    	  data: jQuery.param({ 'emailId': user.emailAddress, 'fname' : user.firstName, 'lname' : user.lastName}),
         success :function(data) {
             var json = JSON.stringify(data);
             if(data.status=="true"){
             	document.cookie="firstname="+data.fname;
             	document.cookie="lastname="+data.lname;
               	document.cookie="account_id="+data.account_id;
-              	document.cookie="emailid="+data.emailid;
+              	document.cookie="emailId="+data.emailId;
               	document.cookie="role="+data.role; 
               	window.location.href = "/home.html";
             }
@@ -347,7 +356,7 @@ function getProfileData() {
       </div>
 	<p id='error' style="color:red;"></p>
       <div class="col">
-        <input type="text" name="emailid" id="emailid" placeholder="Email Id" required>
+        <input type="text" name="emailId" id="emailId" placeholder="Email Id" required>
         <input type="password" name="password" id="password" placeholder="Password" required>
         <input type="submit" value="Login">
       </div>
