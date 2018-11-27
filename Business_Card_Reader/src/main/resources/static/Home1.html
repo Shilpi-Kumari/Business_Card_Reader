@@ -87,7 +87,8 @@ function display_table() {
 				display_data += '</div>';
 				display_data += '</div>';
 			}
-			$('#t01').append(display_data);
+			//$('#t01').append(display_data);
+			document.getElementById('t01').innerHTML = display_data;
 		},
 		error: function (error) {
 			var errorjson = JSON.stringify(error);
