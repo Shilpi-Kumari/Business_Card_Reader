@@ -188,13 +188,17 @@ $(function() {
             data: JSON.stringify(userSignUpRequest),
             success :function(data) {
                 var json = JSON.stringify(data);
-                alert(json);
+                //alert(json);
                 if(data.status=="true"){
                 	document.getElementById('error').innerHTML="Sign Up is Successfull..!! Click back button to login";
                 	document.getElementById('firstName').value="";
                 	document.getElementById('lastName').value="";
                 	document.getElementById('emailId').value="";
                 	document.getElementById('password').value="";
+                	document.getElementById('securityV1').value="";
+                	document.getElementById('securityV2').value="";
+                	document.getElementById('securityQ1').value="none";
+                	document.getElementById('securityQ2').value="none";
                 	//alert("Sign Up is Successfull..!!");
           		 	//window.location.href = "Index.html";
                 }
@@ -210,7 +214,7 @@ $(function() {
 </script>	
 <form id="create_user" method="post" enctype='application/json'>
 	<div align='center'>
-	<h1 align=center style="color:white;font-family:courier;font-size:400%;">WELCOME TO FILE VAULT</h1>	
+	<h2 align=center style="color:black;font-family:courier;font-size:300%;">Welcome To Business Card Directory</h2>	
     <div class="container">
     <div class="row">
       <h1 style="text-align:center;color:green">Sign Up Here!!</h1>
@@ -222,22 +226,22 @@ $(function() {
   			<input type="password" name="password" id="password"  placeholder="Password" onkeyup='check();' required>
   			<input type="password" name="confirm_password" id="confirm_password"  placeholder="Confirm Password" onkeyup='check();' required>
   			<span id='message'></span>
-  			<select id="securityV1">
-  				<option value="">Select First Security Question</option>
+  			<select id="securityQ1">
+  				<option value="none">Select First Security Question</option>
  				<option value="Q1">In what city or town was your first job?</option>
  			    <option value="Q2">Where were you when you first heard about 9/11?</option>
 				<option value="Q3">What is the name of your favorite childhood friend?</option>
 				<option value="Q3">What was your dream job as a child?</option> 
 		    </select>
-		    <input type="text" name="securityQ1" id="securityQ1" required >
-		    <select id="securityV2">
-  				<option value="">Select First Security Question</option>
+		    <input type="text" name="securityV1" id="securityV1" required >
+		    <select id="securityQ2">
+  				<option value="none">Select First Security Question</option>
  				<option value="Q1">In what city or town was your first job?</option>
  			    <option value="Q2">Where were you when you first heard about 9/11?</option>
 				<option value="Q3">What is the name of your favorite childhood friend? </option>
 				<option value="Q3">What was your dream job as a child?</option>
 		    </select>
-		    <input type="text" name="securityQ2" id="securityQ2" required >
+		    <input type="text" name="securityV1" id="securityV1" required >
         <input type="submit" value="Submit">
         <input type="button" value="Back to login page" onclick="window.location.href = 'Index.html';">
       </div>

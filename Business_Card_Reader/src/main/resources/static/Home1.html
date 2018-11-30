@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+	<script src="https://apis.google.com/js/client.js"></script>
   <style>
     /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
     .row.content {height: 550px}
@@ -26,6 +28,86 @@
 <body>
 
 <script>
+
+function addContact(entry) {
+	  var config = {
+	    'client_id': '1056283717020-12usahge7ruejn6frulpbjqe8s6t1bh7.apps.googleusercontent.com',
+	    'scope': 'https://www.google.com/m8/feeds',
+	    'cookie_policy': 'single_host_origin'
+	  };
+	  gapi.auth.authorize(config, function() {
+	    insert(config, entry);
+	  });
+	}
+
+	function insert(config, entry) {
+		var e = JSON.stringify(entry);
+		//alert(e);
+	  gapi.client.request({
+	    'method': 'POST',
+	    'path': '/m8/feeds/contacts/default/full/',
+	    'headers': {
+	      'GData-Version': 3.0
+	    },
+	    'body': {
+	      'entry': [entry]
+	    },
+	    'callback': function(data) {
+	      if (data.hasOwnProperty('entry')) {
+	        var msg = "Your Google Contacts have been updated to include "+JSON.stringify(entry.title.$t);
+	        document.getElementById('error').innerHTML=msg;
+	        //window.alert(msg.concat(data.entry.title.$t))
+	      } else {
+	        var msg = "Contact information could not be added for "+JSON.stringify(entry.title.$t);
+	        document.getElementById('error').innerHTML=msg;
+	       
+	       // window.alert(msg.concat(entry.title.$t))
+	      }
+	    }
+	  });
+	}
+	
+	function addContacts(contactName,contactEmailId,organization,contactNumber) {
+        var entry = {
+          "category": [{
+            "scheme": "http:\/\/schemas.google.com\/g\/2005#kind",
+            "term": "http:\/\/schemas.google.com\/contact\/2008#contact"
+          }],
+          "title": {
+            "type": "text",
+            //"$t": "Team Avengers6"
+            "$t": decodeURI(contactName)
+          },
+          "content": [{
+            "type": "text",
+            "$t": "[Business Card Application]"
+          }],
+          "gd$email": [{
+            "rel": "http:\/\/schemas.google.com\/g\/2005#other",
+            //"address": "Avengers@sjsu.edu",
+            "address": decodeURIComponent(contactEmailId),
+            "primary": "true"
+          }],
+          "gd$organization": [{
+              "rel": "http://schemas.google.com/g/2005#work",
+              "gd$orgName": [{
+                  "type": "text",
+                 // "$t": "Students"
+                  "$t": decodeURIComponent(organization)
+                }],
+              "primary": "true"
+            }],
+          "gd$phoneNumber": [{
+            "rel": "http:\/\/schemas.google.com\/g\/2005#home",
+            "$t": decodeURIComponent(contactNumber),
+            //"$t": "669.248.9381",
+            "primary": "true"
+          }]
+        };
+        addContact(entry);
+      }
+	
+	
 
 function deleteFile(file_id){
 	//var account_id = document.cookie.replace(/(?:(?:^|.*;\s*)account_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -51,11 +133,6 @@ function logout(){
 };
 
 
-function updateFile(description){
-	document.getElementById('description').value=decodeURIComponent(description);
-    document.getElementById('file').focus();
-}
-
 function display_table() {
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -73,17 +150,19 @@ function display_table() {
 			var jsonData = JSON.parse(jsonResponse);
 			var display_data = "";
 			for (var i = 0; i < jsonData.length; i++) {
+				contactName=encodeURI(jsonData[i].contactName);
+				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
+				organization=encodeURIComponent(jsonData[i].organization);
+				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
+				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts()><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
 				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
 				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
 				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
-				//display_data += '<td><button class="download_button" id="' + jsonData[i].fileName + '" type="button" onclick="download(event)">Download</button></td>';
-				//display_data += '<td><button class="edit_button" id="' + jsonData[i].fileName + '" type="button" onclick="edit(event)">Edit</button></td>';
-				//display_data += '<td><button class="delete_button" id="' + jsonData[i].fileName + '" type="button" onclick="deleteFile(event)">Delete</button></td>';
-				//display_data += '</tr>';
+				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button>';
 				display_data += '</div>';
 				display_data += '</div>';
 			}
@@ -155,9 +234,9 @@ $(function() {
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Dashboard</a></li>
-        <li><a href="#">Age</a></li>
-        <li><a href="#">Gender</a></li>
-        <li><a href="#">Geo</a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
       </ul>
     </div>
   </div>
