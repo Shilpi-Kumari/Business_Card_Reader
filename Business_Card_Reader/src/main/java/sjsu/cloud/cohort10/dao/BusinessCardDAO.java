@@ -25,4 +25,6 @@ public interface BusinessCardDAO {
 	
 	Map<String, String> deleteCard(Integer id);
 	
+	List<BusinessCardOutput> searchBusinessCard(String userEmailId, Integer searchType, String searchInput);
+	
 }

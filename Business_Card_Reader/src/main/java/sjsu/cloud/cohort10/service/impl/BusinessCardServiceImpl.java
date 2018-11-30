@@ -145,5 +145,12 @@ public class BusinessCardServiceImpl implements BusinessCardService
             Map<String, String> outputMap = businessCardDAO.deleteCard(id);
             return outputMap;
 	}
+
+	@Override
+	public List<BusinessCardOutput> searchBusinessCard(String userEmailId, Integer searchType, String searchInput) {
+		List<BusinessCardOutput> businessCardList = businessCardDAO.searchBusinessCard(userEmailId, searchType,
+				searchInput);
+		return businessCardList;
+	}
     
 }

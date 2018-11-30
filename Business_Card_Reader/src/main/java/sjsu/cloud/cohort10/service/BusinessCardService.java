@@ -27,4 +27,6 @@ public interface BusinessCardService
     		
     Map<String, String> deleteFileAndUpdateDB(Integer id);
     
+    List<BusinessCardOutput> searchBusinessCard(String userEmailId, Integer searchType, String searchInput);
+    
 }

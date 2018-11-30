@@ -112,6 +112,7 @@ public class BusinessCardDAOImpl implements BusinessCardDAO{
 			businessCardDetails.setOrganization((String)obj.get("CardOrganization"));
 			businessCardDetails.setFileName((String)obj.get("FileName"));
 			businessCardDetails.setFileDescription((String)obj.get("FileDescription"));
+			businessCardDetails.setEmailId((String)obj.get("EmailId"));
 			businessCardList.add(businessCardDetails);
 		}
 		
@@ -167,6 +168,43 @@ public class BusinessCardDAOImpl implements BusinessCardDAO{
 		}
 		return outputMap;
 		
+	}
+
+	@Override
+	public List<BusinessCardOutput> searchBusinessCard(String userEmailId, Integer searchType, String searchInput) {
+		
+		String sql = null;
+		List<BusinessCardOutput> businessCardList = new ArrayList<BusinessCardOutput>();
+		String searchValue = "%"+searchInput+"%";
+		
+		if (searchType == 1) {
+			
+			sql = "SELECT * FROM BUSINESS_CARD_DETAILS where EmailId = ? and CardContactName LIKE ? ";
+		}
+		else {
+			
+			sql = "SELECT * FROM BUSINESS_CARD_DETAILS where EmailId = ? and CardOrganization LIKE ? ";
+			
+		}
+		
+		List<java.util.Map<String, Object>> result = jdbcTemplate.queryForList(sql, userEmailId, searchValue);
+		
+		for(java.util.Map<String, Object> obj : result)
+		{
+			BusinessCardOutput businessCardDetails = new BusinessCardOutput();
+			
+			businessCardDetails.setId((Integer)obj.get("ID"));
+			businessCardDetails.setContactEmailId((String)obj.get("CardContactEmail"));
+			businessCardDetails.setContactName((String)obj.get("CardContactName"));
+			businessCardDetails.setContactNumber((String)obj.get("CardContactMobile"));
+			businessCardDetails.setOrganization((String)obj.get("CardOrganization"));
+			businessCardDetails.setFileName((String)obj.get("FileName"));
+			businessCardDetails.setFileDescription((String)obj.get("FileDescription"));
+			businessCardDetails.setEmailId((String)obj.get("EmailId"));
+			businessCardList.add(businessCardDetails);
+		}
+		
+		return businessCardList;
 	}
 
 }
