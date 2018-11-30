@@ -103,4 +103,35 @@ public class BusinessCardController {
 		}
 		return responseEntity;
 	}
+    
+  //delete file from S3 and DB
+    @RequestMapping(value = "/deleteFileAndUpdateDB", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public Map<String, String> deleteFileAndUpdateDB(@RequestParam Integer id ) {
+    	Map<String, String> responseMap = null;
+    	try {
+   			responseMap = this.businessCardService.deleteFileAndUpdateDB(id);
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
+   		return responseMap;
+	}
+    
+  //get the business card information based on search input
+    @RequestMapping(value = "/searchBusinessCard", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<List<BusinessCardOutput>> searchBusinessCard(@RequestParam String userEmailId,
+			@RequestParam Integer searchType, @RequestParam String searchInput) {
+    	ResponseEntity<List<BusinessCardOutput>> responseEntity = null;
+		try {
+			
+			List<BusinessCardOutput> businessCardOutputList = this.businessCardService.searchBusinessCard(userEmailId,
+					searchType, searchInput);
+			responseEntity = new ResponseEntity<List<BusinessCardOutput>>(businessCardOutputList, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			responseEntity = new ResponseEntity<List<BusinessCardOutput>>(HttpStatus.EXPECTATION_FAILED);
+		}
+		return responseEntity;
+	}
 }

@@ -22,6 +22,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import sjsu.cloud.cohort10.dao.BusinessCardDAO;
@@ -129,6 +130,27 @@ public class BusinessCardServiceImpl implements BusinessCardService
 	public Map<String, String> updateFileDescription(String emailId, String fileName, String fileDescription) {
 		Map<String, String> outputMap = businessCardDAO.updateFileDescription(emailId, fileName, fileDescription);
 		return outputMap;
+	}
+
+	@Override
+	public Map<String, String> deleteFileAndUpdateDB(Integer id) {
+		
+		//DB call to get the file name and users email id to delete the details from S3
+		BusinessCardOutput businessCardDetails = businessCardDAO.getFileDetailsBasedOnId(id);
+		
+		
+		String filePath = businessCardDetails.getEmailId() + "/" + businessCardDetails.getFileName();
+            amazonS3.deleteObject(new DeleteObjectRequest(awsS3AudioBucket, filePath));
+            
+            Map<String, String> outputMap = businessCardDAO.deleteCard(id);
+            return outputMap;
+	}
+
+	@Override
+	public List<BusinessCardOutput> searchBusinessCard(String userEmailId, Integer searchType, String searchInput) {
+		List<BusinessCardOutput> businessCardList = businessCardDAO.searchBusinessCard(userEmailId, searchType,
+				searchInput);
+		return businessCardList;
 	}
     
 }
