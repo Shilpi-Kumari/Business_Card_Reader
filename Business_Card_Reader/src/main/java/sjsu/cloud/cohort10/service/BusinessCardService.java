@@ -13,7 +13,7 @@ import sjsu.cloud.cohort10.dto.UserSignInRequest;
 
 public interface BusinessCardService
 {
-	Map<String, String> uploadBusinessCardToS3(MultipartFile multipartFile,String emailId, 
+	 Map<String, String> uploadBusinessCardToS3(MultipartFile multipartFile,String emailId, 
     		String fileName, String fileDescription, boolean enablePublicReadAccess) throws ValidationException ;
     
     Map<String, String> newUserSignInRequest(UserSignInRequest userRequest);
@@ -24,5 +24,7 @@ public interface BusinessCardService
     
     Map<String, String> updateFileDescription(String emailId, 
     		String fileName, String fileDescription);
+    		
+    Map<String, String> deleteFileAndUpdateDB(Integer id);
     
 }

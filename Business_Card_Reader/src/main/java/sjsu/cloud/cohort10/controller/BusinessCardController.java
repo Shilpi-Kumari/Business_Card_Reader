@@ -103,4 +103,17 @@ public class BusinessCardController {
 		}
 		return responseEntity;
 	}
+    
+  //delete file from S3 and DB
+    @RequestMapping(value = "/deleteFileAndUpdateDB", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public Map<String, String> deleteFileAndUpdateDB(@RequestParam Integer id ) {
+    	Map<String, String> responseMap = null;
+    	try {
+   			responseMap = this.businessCardService.deleteFileAndUpdateDB(id);
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
+   		return responseMap;
+	}
 }

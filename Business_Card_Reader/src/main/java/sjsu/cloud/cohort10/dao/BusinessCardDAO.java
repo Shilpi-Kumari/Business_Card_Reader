@@ -21,4 +21,8 @@ public interface BusinessCardDAO {
 	
 	Map<String, String> updateFileDescription(String emailId, String fileName, String fileDescription);
 	
+	BusinessCardOutput getFileDetailsBasedOnId(Integer id);
+	
+	Map<String, String> deleteCard(Integer id);
+	
 }

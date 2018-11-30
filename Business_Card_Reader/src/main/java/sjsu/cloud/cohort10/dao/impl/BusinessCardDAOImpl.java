@@ -105,6 +105,7 @@ public class BusinessCardDAOImpl implements BusinessCardDAO{
 		{
 			BusinessCardOutput businessCardDetails = new BusinessCardOutput();
 			
+			businessCardDetails.setId((Integer)obj.get("ID"));
 			businessCardDetails.setContactEmailId((String)obj.get("CardContactEmail"));
 			businessCardDetails.setContactName((String)obj.get("CardContactName"));
 			businessCardDetails.setContactNumber((String)obj.get("CardContactMobile"));
@@ -135,6 +136,37 @@ public class BusinessCardDAOImpl implements BusinessCardDAO{
 			outputMap.put("status", "false");
 		}
 		return outputMap;
+	}
+
+	@Override
+	public BusinessCardOutput getFileDetailsBasedOnId(Integer id) {
+		
+		String sql = "SELECT * FROM BUSINESS_CARD_DETAILS where ID = ?";
+		
+		BusinessCardOutput businessCardDetails = (BusinessCardOutput) jdbcTemplate.queryForObject(
+				sql, new Object[] { id }, 
+				new BeanPropertyRowMapper(BusinessCardOutput.class));
+		
+		return businessCardDetails;
+	}
+
+	@Override
+	public Map<String, String> deleteCard(Integer id) {
+		
+		HashMap<String, String> outputMap = new HashMap<>();
+		try {
+		String sql = "DELETE FROM BUSINESS_CARD_DETAILS where ID = ?";
+		
+		jdbcTemplate.update(sql, id);
+		
+		outputMap.put("status", "true");
+		
+		}catch (Exception e)
+		{
+			outputMap.put("status", "false");
+		}
+		return outputMap;
+		
 	}
 
 }

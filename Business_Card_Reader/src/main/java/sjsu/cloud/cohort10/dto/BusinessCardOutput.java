@@ -12,7 +12,22 @@ public class BusinessCardOutput implements Serializable{
 	private String contactNumber = null;
 	private String fileName;
 	private String fileDescription;
+	private Integer id;
+	private String emailId = null;
 	
+	
+	public String getEmailId() {
+		return emailId;
+	}
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getContactName() {
 		return contactName;
 	}
