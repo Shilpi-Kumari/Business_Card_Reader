@@ -109,18 +109,78 @@ function addContact(entry) {
 	
 	
 
-function deleteFile(file_id){
-	//var account_id = document.cookie.replace(/(?:(?:^|.*;\s*)account_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+function deleteContacts(id){
+	//alert(id);	
 	$('#spinner').show();
 	$.ajax({
-        url: "accounts/"+account_id+"/files/"+file_id,
-        type: 'DELETE',
+        url: "/deleteFileAndUpdateDB",
+        type: 'POST',
+        data: { id: id },
         success :function(data) {
         document.getElementById('error').innerHTML="File deleted successfully...!!";
           display_table();
           $('#spinner').hide();
        }
     });
+};
+
+function referContact(id){
+	//alert(id);	
+	$('#spinner').show();
+	$.ajax({
+        url: "/deleteFileAndUpdateDB",
+        type: 'POST',
+        data: { id: id },
+        success :function(data) {
+        document.getElementById('error').innerHTML="File deleted successfully...!!";
+          display_table();
+          $('#spinner').hide();
+       }
+    });
+};
+
+function searchCard() {
+	$('#spinner').show();
+	var userEmailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var searchType = document.getElementById('searchType').value;
+	var searchInput = document.getElementById('searchInput').value;
+	
+	$.ajax({
+		type: 'GET',
+		url: '/searchBusinessCard',
+		data: { userEmailId: userEmailId,searchType: searchType,searchInput: searchInput },
+		success: function (data) {
+			var jsonResponse = JSON.stringify(data);
+			var jsonData = JSON.parse(jsonResponse);
+			//alert(jsonResponse);
+			var display_data = "";
+			for (var i = 0; i < jsonData.length; i++) {
+				contactName=encodeURI(jsonData[i].contactName);
+				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
+				organization=encodeURIComponent(jsonData[i].organization);
+				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
+				var cardId=parseInt(jsonData[i].id,10);
+				display_data += '<div class="col-sm-4">';
+				display_data += '<div class="well">';
+				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
+				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
+				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
+				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
+				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
+				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
+				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button>';
+				display_data += '<button onClick=referContact("'+ contactEmailId +'")>Add Contact To Google</button>';
+				display_data += '</div>';
+				display_data += '</div>';
+			}
+			//$('#t01').append(display_data);
+			document.getElementById('t01').innerHTML = display_data;
+			$('#spinner').hide();
+		},
+		error: function (error) {
+			var errorjson = JSON.stringify(error);
+		}
+	});
 };
 
 function logout(){
@@ -148,15 +208,17 @@ function display_table() {
 		success: function (data) {
 			var jsonResponse = JSON.stringify(data);
 			var jsonData = JSON.parse(jsonResponse);
+			//alert(jsonResponse);
 			var display_data = "";
 			for (var i = 0; i < jsonData.length; i++) {
 				contactName=encodeURI(jsonData[i].contactName);
 				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
 				organization=encodeURIComponent(jsonData[i].organization);
 				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
+				var cardId=parseInt(jsonData[i].id,10);
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
-				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts()><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
+				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
 				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
 				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
 				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
@@ -264,7 +326,14 @@ $(function() {
         <h4>Upload Card Here:</h4>
         <form id="upload_file" method="post" enctype="multipart/form-data">
 	 		<p id='error' style="color:green;"></p>
-  			<input type="file" name="file" id="file" required><input type="text" name="description" id="description" placeholder="Comments"><button>Upload File</button>
+  			<input type="file" name="file" id="file" required><input type="text" name="description" id="description" placeholder="Comments"><button onClick=searchCard()>Upload File</button><br>
+  			<select id='searchType' name='searchType'>
+  				<option value=''>Search Criteria</option>
+  				<option value='1'>Name</option>
+  				<option value='2'>Organization</option>
+  			</select>
+  			<input type='text' name='searchInput' id='searchInput' placeholder='Search Text'>
+  			<a href=javascript:void(0) onClick=searchCard()><i class="fa fa-search"></i></a>
 	</form>
 
 	<div id="spinner">
