@@ -31,6 +31,7 @@ import sjsu.cloud.cohort10.dto.BusinessCardOutput;
 import sjsu.cloud.cohort10.dto.UserLoginRequest;
 import sjsu.cloud.cohort10.dto.UserSignInRequest;
 import sjsu.cloud.cohort10.helper.AWSDetectTextRekognitionHelper;
+import sjsu.cloud.cohort10.helper.AWSSimpleEmailServiceHelper;
 import sjsu.cloud.cohort10.service.BusinessCardService;
 
 @Component
@@ -51,6 +52,9 @@ public class BusinessCardServiceImpl implements BusinessCardService
     
     @Autowired
     AWSDetectTextRekognitionHelper rekognitionHelper;
+    
+    @Autowired
+    AWSSimpleEmailServiceHelper simpleEmailService;
     
     @Autowired
     BusinessCardDAO businessCardDAO;
@@ -151,6 +155,13 @@ public class BusinessCardServiceImpl implements BusinessCardService
 		List<BusinessCardOutput> businessCardList = businessCardDAO.searchBusinessCard(userEmailId, searchType,
 				searchInput);
 		return businessCardList;
+	}
+
+	@Override
+	public Map<String, String> businessCardReferral(String toEmail, String fromEmail) {
+		
+		Map<String, String> outputMap = simpleEmailService.businessCardReferral(toEmail, fromEmail);
+		return outputMap;
 	}
     
 }
