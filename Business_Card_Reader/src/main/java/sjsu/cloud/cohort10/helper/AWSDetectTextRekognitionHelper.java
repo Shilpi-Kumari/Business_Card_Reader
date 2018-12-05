@@ -69,8 +69,10 @@ public class AWSDetectTextRekognitionHelper {
         		 }
         		 
         		//logic to get the contact number from the aws rekognition output
-        		 if (text.getDetectedText().contains("direct") || text.getDetectedText().contains("Phone")
-        				 || text.getDetectedText().contains("Mob") || count >= 10)
+        		 if ((text.getDetectedText().contains("direct") || text.getDetectedText().contains("Phone")
+        				 || text.getDetectedText().contains("Mob") || text.getDetectedText().contains("Office")
+        				 || count >= 10) && (!(text.getDetectedText().contains("Fax") || 
+        						 text.getDetectedText().contains("fax"))))
         		 {
         			 contactNbrParentId = text.getId();
         		 }
@@ -88,7 +90,8 @@ public class AWSDetectTextRekognitionHelper {
         		 if ((text.getDetectedText().contains(".") || 
         				text.getDetectedText().contains("(") ||
         				text.getDetectedText().contains("-") ||
-        				text.getDetectedText().contains(" ")) && text.getParentId() == contactNbrParentId)
+        				text.getDetectedText().contains(" ") ||
+        				Character.isDigit(text.getDetectedText().charAt(0))) && text.getParentId() == contactNbrParentId)
         		 {
         			 if (i==2) {
         				 String tempContactNumber = businessCardInput.getContactNumber();
