@@ -138,11 +138,13 @@ public class BusinessCardController {
     //send email to friend for referral scenario
     @RequestMapping(value = "/businessCardReferral", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public Map<String, String> businessCardReferral(@RequestParam String toEmail,
-			@RequestParam String fromEmail) {
+	public Map<String, String> businessCardReferral(@RequestParam String referEmailId,
+			@RequestParam String firstName, @RequestParam String lastName, @RequestParam String contactName,
+			@RequestParam String contactEmailId, @RequestParam String organization, @RequestParam String contactNumber) {
     	Map<String, String> responseMap = null;
     	try {
-   			responseMap = this.businessCardService.businessCardReferral(toEmail, fromEmail);
+   			responseMap = this.businessCardService.businessCardReferral(referEmailId, firstName, lastName, contactName,
+   					contactEmailId, organization, contactNumber);
    		} catch (Exception e) {
    			e.printStackTrace();
    		}

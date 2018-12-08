@@ -9,14 +9,6 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
 	<script src="https://apis.google.com/js/client.js"></script>
-	
-	<!-- CSS Styles FOR SPEEK BOX -->
-<style>
-    .speech {border: 1px solid #DDD; width: 300px; padding: 0; margin: 0}
-    .speech input {border: 0; width: 240px; display: inline-block; height: 30px;}
-    .speech img {float: right; width: 40px }
- </style>
-    
   <style>
     /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
     .row.content {height: 550px}
@@ -37,7 +29,6 @@
 
 <script>
 
-
 function startDictation() {
     
     if (window.hasOwnProperty('webkitSpeechRecognition')) {
@@ -54,31 +45,20 @@ function startDictation() {
             document.getElementById('transcript').value
             = e.results[0][0].transcript;
             recognition.stop();
-            var x = document.getElementById("myAudio2");
+            var audio = document.getElementById("myAudio");
             var count = 0;
-           
-         
             
+            audio.play();
             
-            if (document.getElementById('transcript').value
-                == "I want to schedule a meeting")
-                {
+            while(count<5500000000)
+            {
+                count++;
+            }
+
                     document.getElementById('labnol').submit();
                     var chatBotText = document.getElementById('transcript').value;
-                    //alert(chatBotText);
-                    document.cookie="chatBotText="+chatBotText;
-                    x.play();
-                    while(count<4500000000)
-                    {
-                        count++;
-                    }
-                    
-                }
-            else{
-            	var audio = document.getElementById('myAudio');
-            	document.getElementById('error').innerHTML="Give proper input. ex. I want to schedule a meerting...!!!"
-            	audio.play();
-            }
+ 
+            
         };
         
         recognition.onerror = function(e) {
@@ -220,14 +200,8 @@ function searchCard() {
 		success: function (data) {
 			var jsonResponse = JSON.stringify(data);
 			var jsonData = JSON.parse(jsonResponse);
-			var display_data = "";
 			//alert(jsonResponse);
-			if(jsonData.length == 0)
-				{
-					document.getElementById('error').innerHTML="No cards found..!!!";
-					display_data = "";
-				}
-			else{
+			var display_data = "";
 			for (var i = 0; i < jsonData.length; i++) {
 				contactName=encodeURI(jsonData[i].contactName);
 				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
@@ -242,22 +216,25 @@ function searchCard() {
 				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
-				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br>';
+				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button>';
 				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
 				display_data += '</div>';
 				display_data += '</div>';
 			}
 			//$('#t01').append(display_data);
-			}
 			document.getElementById('t01').innerHTML = display_data;
 			$('#spinner').hide();
 		},
 		error: function (error) {
 			var errorjson = JSON.stringify(error);
-			
 		}
 	});
 };
+
+function downloadCard(cfurl){
+	window.location = cfurl;
+
+}
 
 function logout(){
 	//var account_id = document.cookie.replace(/(?:(?:^|.*;\s*)account_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -287,20 +264,25 @@ function display_table() {
 			//alert(jsonResponse);
 			var display_data = "";
 			for (var i = 0; i < jsonData.length; i++) {
-				contactName=encodeURI(jsonData[i].contactName);
-				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
-				organization=encodeURIComponent(jsonData[i].organization);
-				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
+				var contactName=encodeURI(jsonData[i].contactName);
+				var contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
+				var organization=encodeURIComponent(jsonData[i].organization);
+				var contactNumber=encodeURIComponent(jsonData[i].contactNumber);
+				var fileName=encodeURIComponent(jsonData[i].fileName);
+				var cfurl="http://d2elsy7g2c4ken.cloudfront.net/"+emailId+"/"+decodeURIComponent(jsonData[i].fileName);
 				var cardId=parseInt(jsonData[i].id,10);
+				//alert(cfurl);
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
-				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
+				display_data += '<div align="right"><a href="'+ cfurl +'" target="_blank"><i class="fa fa-download" style="font-size:30px;color:green"></i></a>';
+				//display_data += '<div align="right"><a href=javascript:void(0) onClick=downloadCard("'+ cfurl +'")><i class="fa fa-download" style="font-size:30px;color:green"></i></a>';
+				display_data += '<a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
 				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
 				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
 				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
-				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br';
+				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br>';
 				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
 				display_data += '</div>';
 				display_data += '</div>';
@@ -316,13 +298,7 @@ function display_table() {
 
 $(document).ready(function () {
 	$('#spinner').hide();
-	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-	var emailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-	//document.getElementById('description').value="";
-    //document.getElementById('file').value="";
-	document.getElementById("displayUser").innerHTML='Welcome ' + firstName +" "+lastName;
-	//display_table()
+	display_table()
 });
 
 $(function() {
@@ -356,7 +332,7 @@ $(function() {
             	//alert(data.reason);
             	if(data.status=="true")
             	{document.getElementById('error').innerHTML="File Uploaded Successfully...!!!";}
-            	//display_table();
+            	display_table();
             	$('#spinner').hide();
               }
         });
@@ -393,9 +369,9 @@ $(function() {
       <h3>Business Card Directory</h3>
       <div align='left'><span style="font-size:150%" id='displayUser'></span></div>
       <ul class="nav nav-pills nav-stacked">
-        <li class="active"><a href="Home1.html">Dashboard</a></li>
+        <li><a href="Home1.html">Dashboard</a></li>
         <li><a href="#section2">Profile</a></li>
-        <li><a href="ListCards.html">List of Cards</a></li>
+        <li class="active"><a href="ListCards.html">List of Cards</a></li>
         <li><a href="#section3">Update</a></li>
         <li><a href=index.html onClick=logout()>
           <span class="glyphicon glyphicon-log-out"></span> Log out
@@ -406,46 +382,20 @@ $(function() {
     
     <div class="col-sm-9">
       <div class="well">
-        <h4>Upload Card Here:</h4>
-        <form id="upload_file" method="post" enctype="multipart/form-data">
-	 		<p id='error' style="color:green;"></p>
-  			<input type="file" name="file" id="file" required><input type="text" name="description" id="description" placeholder="Comments">
-  			<button>Upload File</button><br>
-  			<br><br>
-  			</form>
-  			<div align="">
-  			<select id='searchType' name='searchType'>
-  				<option value=''>Search Criteria</option>
-  				<option value='1'>Name</option>
-  				<option value='2'>Organization</option>
-  			</select>
-  			<input type='text' name='searchInput' id='searchInput' placeholder='Search Card' required>
-  			<a href=javascript:void(0) onClick=searchCard()><i class="fa fa-search"></i></a>
-  			</div>
-	
-	 <br><br>
-	<form id="labnol" method="get" action="ChatBot.html">
+<h2>List of Cards</h2>
+<form id="labnol" method="get" action="https://www.google.com/search" target="_blank">
     <div class="speech">
-   
-        Schedule Meeting:<input type="text" name="q" id="transcript" placeholder="Speak" />
-        <img onclick="startDictation()" src="cHidSVu.gif"/>
+        Google Search:<input type="text" name="q" id="transcript" placeholder="Speak" />
+        <img onclick="startDictation()" src="cHidSVu.gif" />
     </div>
 	</form>
-
-
-
 	<audio id="myAudio">
-    <source src="voiceerror.mp3" type="audio/mp3">
-        <source src="voiceerror.mp3" type="audio/mpeg">
+    <source src="result.mp3" type="audio/mp3">
+        <source src="result.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
 	</audio>
 	
-<audio id="myAudio2">
-    <source src="goahead.mp3" type="audio/mp3">
-        <source src="goahead.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-	</audio>
-	
+<p id='error' style="color:green;"></p>
 	<div id="spinner">
 		<img src="ajax-loader.gif" />
 	</div>

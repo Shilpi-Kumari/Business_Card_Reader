@@ -29,6 +29,7 @@ public interface BusinessCardService
     
     List<BusinessCardOutput> searchBusinessCard(String userEmailId, Integer searchType, String searchInput);
     
-    Map<String, String> businessCardReferral(String toEmail, String fromEmail);
+    Map<String, String> businessCardReferral(String toEmail, String firstName, String lastName, String contactName,
+				String contactEmailId, String organization, String contactNumber);
     
 }

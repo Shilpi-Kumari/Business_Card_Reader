@@ -20,32 +20,34 @@ import com.amazonaws.services.simpleemail.model.VerifyEmailIdentityResult;
 @Component
 public class AWSSimpleEmailServiceHelper {
 	
-	public Map<String, String> businessCardReferral (String toEmail, String fromEmail)  {
+	public Map<String, String> businessCardReferral (String toEmail, String firstName, String lastName, String contactName,
+			String contactEmailId, String organization, String contactNumber)  {
 		
-
-AmazonSimpleEmailService client1 = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.US_WEST_2).build();
-VerifyEmailIdentityRequest request1 = new VerifyEmailIdentityRequest().withEmailAddress("kiranjatty37@gmail.com");
-VerifyEmailIdentityResult response = client1.verifyEmailIdentity(request1);
 
 		HashMap<String, String> outputMap = new HashMap<>();
 		
-		String FROM = fromEmail;
+		String FROM = "BusinessCardDirectory@harshit-sjsu.com";
 
 		String TO = toEmail;
 		
 		// The subject line for the email.
-		 String SUBJECT = "BUSINESS CARD REFERRAL";
+		 String SUBJECT = "BUSINESS CARD DIRECTORY: CARD REFERRAL";
 		  
 		  // The email body for recipients with non-HTML email clients.
-		  String TEXTBODY = "This email was sent through Amazon SES "
-		      + "using the AWS SDK for Java.";
+		  String TEXTBODY = " A business card has been referred to you by "+firstName+" "+lastName+" using Business"
+		  		+ " Card Directory Application.\r\n\r\n"
+		  		+ "Please find the card details below:\r\n"
+		  		+ "Name: "+contactName+"\r\n"
+		  				+ "Email Id: "+contactEmailId+"\r\n"
+		  						+ "Contact: "+contactNumber+"\r\n"
+		  								+ "Organization: "+organization+"";
 		  
 		  try {
 		      AmazonSimpleEmailService client = 
 		          AmazonSimpleEmailServiceClientBuilder.standard()
 		          // Replace US_WEST_2 with the AWS Region you're using for
 		          // Amazon SES.
-		            .withRegion(Regions.US_WEST_2).build();
+		            .withRegion(Regions.US_EAST_1).build();
 		      SendEmailRequest request = new SendEmailRequest()
 		          .withDestination(
 		              new Destination().withToAddresses(TO))

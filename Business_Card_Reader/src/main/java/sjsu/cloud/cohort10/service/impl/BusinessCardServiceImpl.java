@@ -158,9 +158,11 @@ public class BusinessCardServiceImpl implements BusinessCardService
 	}
 
 	@Override
-	public Map<String, String> businessCardReferral(String toEmail, String fromEmail) {
+	public Map<String, String> businessCardReferral(String toEmail, String firstName, String lastName, String contactName,
+			String contactEmailId, String organization, String contactNumber) {
 		
-		Map<String, String> outputMap = simpleEmailService.businessCardReferral(toEmail, fromEmail);
+		Map<String, String> outputMap = simpleEmailService.businessCardReferral(toEmail, firstName, lastName, contactName,
+					contactEmailId, organization, contactNumber);
 		return outputMap;
 	}
     
