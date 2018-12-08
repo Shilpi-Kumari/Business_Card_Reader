@@ -27,4 +27,6 @@ public interface BusinessCardDAO {
 	
 	List<BusinessCardOutput> searchBusinessCard(String userEmailId, Integer searchType, String searchInput);
 	
+	Map<String, String> getBusinessCardUrls();
+	
 }

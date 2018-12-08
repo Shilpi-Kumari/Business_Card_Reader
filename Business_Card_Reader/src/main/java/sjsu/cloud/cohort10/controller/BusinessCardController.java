@@ -150,4 +150,17 @@ public class BusinessCardController {
    		}
    		return responseMap;
 	}
+    
+    //get urls of Cloud front and Cognito Ids 
+    @RequestMapping(value = "/getBusinessCardUrls", method = RequestMethod.GET, produces = "application/json")
+   	@ResponseBody
+   	public Map<String, String> getBusinessCardUrls() {
+    	Map<String, String> responseMap = null;
+   		try {
+   			responseMap = this.businessCardService.getBusinessCardUrls();
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
+   		return responseMap;
+   	}
 }

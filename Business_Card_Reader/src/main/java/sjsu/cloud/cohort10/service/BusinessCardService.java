@@ -32,4 +32,6 @@ public interface BusinessCardService
     Map<String, String> businessCardReferral(String toEmail, String firstName, String lastName, String contactName,
 				String contactEmailId, String organization, String contactNumber);
     
+    Map<String, String> getBusinessCardUrls();
+    
 }

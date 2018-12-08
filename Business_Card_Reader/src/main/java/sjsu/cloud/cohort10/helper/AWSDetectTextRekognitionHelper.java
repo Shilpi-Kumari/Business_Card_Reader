@@ -87,11 +87,12 @@ public class AWSDetectTextRekognitionHelper {
         		 }
         		 
         		 //logic to get various formats of phone numbers in business cards
-        		 if ((text.getDetectedText().contains(".") || 
-        				text.getDetectedText().contains("(") ||
-        				text.getDetectedText().contains("-") ||
-        				text.getDetectedText().contains(" ") ||
-        				Character.isDigit(text.getDetectedText().charAt(0))) && text.getParentId() == contactNbrParentId)
+        		 if (((text.getDetectedText().contains(".") && Character.isDigit(text.getDetectedText().charAt(0))) ||
+        				 text.getDetectedText().contains("(") ||
+        				 text.getDetectedText().contains("-") ||
+        				 text.getDetectedText().contains(" ") ||
+        				 Character.isDigit(text.getDetectedText().charAt(0))) && text.getParentId() == contactNbrParentId)
+
         		 {
         			 if (i==2) {
         				 String tempContactNumber = businessCardInput.getContactNumber();

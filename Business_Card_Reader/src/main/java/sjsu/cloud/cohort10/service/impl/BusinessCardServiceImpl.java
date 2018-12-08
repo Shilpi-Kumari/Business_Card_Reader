@@ -165,5 +165,11 @@ public class BusinessCardServiceImpl implements BusinessCardService
 					contactEmailId, organization, contactNumber);
 		return outputMap;
 	}
+
+	@Override
+	public Map<String, String> getBusinessCardUrls() {
+		Map<String, String> outputMap = businessCardDAO.getBusinessCardUrls();
+		return outputMap;
+	}
     
 }

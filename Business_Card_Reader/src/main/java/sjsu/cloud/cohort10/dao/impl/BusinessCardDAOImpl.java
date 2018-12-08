@@ -207,4 +207,27 @@ public class BusinessCardDAOImpl implements BusinessCardDAO{
 		return businessCardList;
 	}
 
+	@Override
+	public Map<String, String> getBusinessCardUrls() {
+		
+		HashMap<String, String> outputMap = new HashMap<>();
+		try {
+		String sql = "SELECT CloudFrontURL FROM CloudProject2.BUSINESS_CARD_URLS";
+		
+		String sql1 = "SELECT CognitoID FROM CloudProject2.BUSINESS_CARD_URLS";
+		
+		String cloudFronURl = jdbcTemplate.queryForObject(sql, String.class);
+		
+		String cognitoID = jdbcTemplate.queryForObject(sql1, String.class);
+		
+		outputMap.put("status", "true");
+		outputMap.put("CloudFrontUrl", cloudFronURl);
+		outputMap.put("CognitoID", cognitoID);
+		
+		}catch (Exception e)
+		{
+			outputMap.put("status", "false");
+		}
+		return outputMap;
+	}
 }
