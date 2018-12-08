@@ -61,7 +61,7 @@ function startDictation() {
             
             
             if (document.getElementById('transcript').value
-                == "I want to schedule a meeting")
+                == ("I want to schedule a meeting" || "i want to schedule meeting" || "connect me" || "i want to request service"))
                 {
                     document.getElementById('labnol').submit();
                     var chatBotText = document.getElementById('transcript').value;
@@ -189,6 +189,7 @@ function referContact(contactName,contactEmailId,organization,contactNumber){
 	var contactEmailId = decodeURIComponent(contactEmailId);
 	var organization = decodeURIComponent(organization);
 	var contactNumber = decodeURIComponent(contactNumber);
+	var cardId = decodeURIComponent(cardId);
 	
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -198,7 +199,7 @@ function referContact(contactName,contactEmailId,organization,contactNumber){
 	$.ajax({
         url: "/businessCardReferral",
         type: 'POST',
-        data: { firstName: firstName,lastName: lastName,referEmailId: referEmailId,contactName: contactName,contactEmailId: contactEmailId, organization: organization,contactNumber: contactNumber },
+        data: { cardId: cardId,firstName: firstName,lastName: lastName,referEmailId: referEmailId,contactName: contactName,contactEmailId: contactEmailId, organization: organization,contactNumber: contactNumber },
         success :function(data) {
         document.getElementById('error').innerHTML="Card has been referred succefully!!";
           display_table();
@@ -229,10 +230,10 @@ function searchCard() {
 				}
 			else{
 			for (var i = 0; i < jsonData.length; i++) {
-				contactName=encodeURI(jsonData[i].contactName);
-				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
-				organization=encodeURIComponent(jsonData[i].organization);
-				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
+				var contactName=encodeURI(jsonData[i].contactName);
+				var contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
+				var organization=encodeURIComponent(jsonData[i].organization);
+				var contactNumber=encodeURIComponent(jsonData[i].contactNumber);
 				var cardId=parseInt(jsonData[i].id,10);
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
@@ -243,7 +244,7 @@ function searchCard() {
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
 				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br>';
-				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
+				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ cardId +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
 				display_data += '</div>';
 				display_data += '</div>';
 			}
@@ -392,11 +393,9 @@ $(function() {
     <div class="col-sm-3 sidenav hidden-xs">
       <h3>Business Card Directory</h3>
       <div align='left'><span style="font-size:150%" id='displayUser'></span></div>
-      <ul class="nav nav-pills nav-stacked">
+      <ul class="nav nav-pills nav-stacked"><br>
         <li class="active"><a href="Home1.html">Dashboard</a></li>
-        <li><a href="#section2">Profile</a></li>
         <li><a href="ListCards.html">List of Cards</a></li>
-        <li><a href="#section3">Update</a></li>
         <li><a href=index.html onClick=logout()>
           <span class="glyphicon glyphicon-log-out"></span> Log out
 	 </a></li>
@@ -413,17 +412,17 @@ $(function() {
   			<button>Upload File</button><br>
   			<br><br>
   			</form>
-  			<div align="">
-  			<select id='searchType' name='searchType'>
+  		</div>
+  		<div class="well">
+  		<select id='searchType' name='searchType'>
   				<option value=''>Search Criteria</option>
   				<option value='1'>Name</option>
   				<option value='2'>Organization</option>
   			</select>
   			<input type='text' name='searchInput' id='searchInput' placeholder='Search Card' required>
-  			<a href=javascript:void(0) onClick=searchCard()><i class="fa fa-search"></i></a>
-  			</div>
-	
-	 <br><br>
+  			<a href=javascript:void(0) onClick=searchCard()><i class="fa fa-search"></i></a> 		
+			</div>
+	<div class="well">
 	<form id="labnol" method="get" action="ChatBot.html">
     <div class="speech">
    

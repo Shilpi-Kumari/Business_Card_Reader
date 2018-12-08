@@ -16,7 +16,7 @@
     /* Set gray background color and 100% height */
     .sidenav {
       background-color: #f1f1f1;
-      height: 100%;
+      height: 200%;
     }
         
     /* On small screens, set height to 'auto' for the grid */
@@ -28,6 +28,58 @@
 <body>
 
 <script>
+
+function searchCard() {
+	$('#spinner').show();
+	var userEmailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var searchType = document.getElementById('searchType').value;
+	var searchInput = document.getElementById('searchInput').value;
+	
+	$.ajax({
+		type: 'GET',
+		url: '/searchBusinessCard',
+		data: { userEmailId: userEmailId,searchType: searchType,searchInput: searchInput },
+		success: function (data) {
+			var jsonResponse = JSON.stringify(data);
+			var jsonData = JSON.parse(jsonResponse);
+			var display_data = "";
+			//alert(jsonResponse);
+			if(jsonData.length == 0)
+				{
+					document.getElementById('error').innerHTML="No cards found..!!!";
+					display_data = "";
+				}
+			else{
+			for (var i = 0; i < jsonData.length; i++) {
+				contactName=encodeURI(jsonData[i].contactName);
+				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
+				organization=encodeURIComponent(jsonData[i].organization);
+				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
+				var cardId=parseInt(jsonData[i].id,10);
+				display_data += '<div class="col-sm-4">';
+				display_data += '<div class="well">';
+				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
+				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
+				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
+				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
+				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
+				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
+				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br>';
+				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
+				display_data += '</div>';
+				display_data += '</div>';
+			}
+			//$('#t01').append(display_data);
+			}
+			document.getElementById('t01').innerHTML = display_data;
+			$('#spinner').hide();
+		},
+		error: function (error) {
+			var errorjson = JSON.stringify(error);
+			
+		}
+	});
+};
 
 function startDictation() {
     
@@ -169,6 +221,7 @@ function referContact(contactName,contactEmailId,organization,contactNumber){
 	var contactEmailId = decodeURIComponent(contactEmailId);
 	var organization = decodeURIComponent(organization);
 	var contactNumber = decodeURIComponent(contactNumber);
+	var cardId = decodeURIComponent(cardId);
 	
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -178,7 +231,7 @@ function referContact(contactName,contactEmailId,organization,contactNumber){
 	$.ajax({
         url: "/businessCardReferral",
         type: 'POST',
-        data: { firstName: firstName,lastName: lastName,referEmailId: referEmailId,contactName: contactName,contactEmailId: contactEmailId, organization: organization,contactNumber: contactNumber },
+        data: { cardId: cardId,firstName: firstName,lastName: lastName,referEmailId: referEmailId,contactName: contactName,contactEmailId: contactEmailId, organization: organization,contactNumber: contactNumber },
         success :function(data) {
         document.getElementById('error').innerHTML="Card has been referred succefully!!";
           display_table();
@@ -192,6 +245,7 @@ function searchCard() {
 	var userEmailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var searchType = document.getElementById('searchType').value;
 	var searchInput = document.getElementById('searchInput').value;
+	var emailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	
 	$.ajax({
 		type: 'GET',
@@ -203,21 +257,26 @@ function searchCard() {
 			//alert(jsonResponse);
 			var display_data = "";
 			for (var i = 0; i < jsonData.length; i++) {
-				contactName=encodeURI(jsonData[i].contactName);
-				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
-				organization=encodeURIComponent(jsonData[i].organization);
-				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
+				var contactName=encodeURI(jsonData[i].contactName);
+				var contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
+				var organization=encodeURIComponent(jsonData[i].organization);
+				var contactNumber=encodeURIComponent(jsonData[i].contactNumber);
+				var fileName=encodeURIComponent(jsonData[i].fileName);
+				var cfurl="http://d2elsy7g2c4ken.cloudfront.net/"+emailId+"/"+decodeURIComponent(jsonData[i].fileName);
 				var cardId=parseInt(jsonData[i].id,10);
+				//alert(cfurl);
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
-				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
+				display_data += '<div align="right"><a href="'+ cfurl +'" target="_blank"><i class="fa fa-download" style="font-size:30px;color:green"></i></a>';
+				//display_data += '<div align="right"><a href=javascript:void(0) onClick=downloadCard("'+ cfurl +'")><i class="fa fa-download" style="font-size:30px;color:green"></i></a>';
+				display_data += '<a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
 				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
 				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
 				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
-				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button>';
-				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
+				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br>';
+				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ cardId +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
 				display_data += '</div>';
 				display_data += '</div>';
 			}
@@ -368,11 +427,9 @@ $(function() {
     <div class="col-sm-3 sidenav hidden-xs">
       <h3>Business Card Directory</h3>
       <div align='left'><span style="font-size:150%" id='displayUser'></span></div>
-      <ul class="nav nav-pills nav-stacked">
+      <ul class="nav nav-pills nav-stacked"><br>
         <li><a href="Home1.html">Dashboard</a></li>
-        <li><a href="#section2">Profile</a></li>
         <li class="active"><a href="ListCards.html">List of Cards</a></li>
-        <li><a href="#section3">Update</a></li>
         <li><a href=index.html onClick=logout()>
           <span class="glyphicon glyphicon-log-out"></span> Log out
 	 </a></li>
@@ -381,14 +438,24 @@ $(function() {
     <br>
     
     <div class="col-sm-9">
-      <div class="well">
-<h2>List of Cards</h2>
+  <div class="well">
 <form id="labnol" method="get" action="https://www.google.com/search" target="_blank">
     <div class="speech">
         Google Search:<input type="text" name="q" id="transcript" placeholder="Speak" />
         <img onclick="startDictation()" src="cHidSVu.gif" />
     </div>
 	</form>
+	</div>
+	<div class="well">
+	<h4>Search Card</h4>
+  		<select id='searchType' name='searchType'>
+  				<option value=''>Search Criteria</option>
+  				<option value='1'>Name</option>
+  				<option value='2'>Organization</option>
+  			</select>
+  			<input type='text' name='searchInput' id='searchInput' placeholder='Search Card' required>
+  			<a href=javascript:void(0) onClick=searchCard()><i class="fa fa-search"></i></a> 		
+			</div>
 	<audio id="myAudio">
     <source src="result.mp3" type="audio/mp3">
         <source src="result.mp3" type="audio/mpeg">
@@ -401,10 +468,11 @@ $(function() {
 	</div>
 	
       </div>
+      <div class="col-sm-9">
       <div class="row" id="t01">
         
       </div>
-   
+   	</div>
     </div>
   </div>
 </div>
