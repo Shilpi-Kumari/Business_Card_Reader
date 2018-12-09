@@ -62,8 +62,19 @@ User can Logout using the logout button.
 23. AWS Certificate Manger: Used to issue the TSL/SSL Certificate for our domain to enable the https request to provide the encryption of the data in transit.
 
 ### Pre-requisites Set Up<br>
-List of resources one need to configure in their cloud account:
-List of required software to download locally:
-Local configuration:
-### Deplyment Instruction
+1) Download Spring Tool Suite 4 as IDE
+2) Create Amazon Web Services account
+3) Create a database in AWS MYSQL
+4) Install MYSQLworkbench
+5) Create S3 bucket in AWS
+6) Create a IAM role and place AWS AccessKey and password securely
+
+### Deplyment Instruction<br>
+1) Clone the project URL from Github
+2) Import the project in STS.
+3) Change the application properties in  src/main/resources and save
+4) Right click on project folder and Run as maven clean
+5) Right click on project folder and Run as maven install
+6) Right Click on project folder and Run as Spring Boot App
+7) Open browser and provide https://localhost:portnumber
 ### Sample Screenshots:
