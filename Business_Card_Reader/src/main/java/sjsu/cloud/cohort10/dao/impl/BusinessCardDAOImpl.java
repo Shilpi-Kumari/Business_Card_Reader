@@ -230,4 +230,50 @@ public class BusinessCardDAOImpl implements BusinessCardDAO{
 		}
 		return outputMap;
 	}
+	
+	@Override
+	public Map<String, String> getSocialUserDetails(String emailId) {
+		
+		HashMap<String, String> outputMap = new HashMap<>();
+		try {
+			String sql = "SELECT * FROM CUSTOMER_INFO WHERE EmailId = ?";
+			
+			UserDetailsDTO userDetailsDTO = (UserDetailsDTO) jdbcTemplate.queryForObject(
+					sql, new Object[] { emailId}, 
+					new BeanPropertyRowMapper(UserDetailsDTO.class));
+			
+			outputMap.put("status", "true");
+			outputMap.put("dbrecord", "success");
+			outputMap .put("emailid", userDetailsDTO.getEmailId());
+			
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+			outputMap.put("status", "false");
+			outputMap.put("dbrecord", "error");
+			outputMap .put("emailid", null);
+		}
+		return outputMap;
+	}
+	
+	@Override
+	public Map<String, String> createSocialLoginUser(String emailId, String firstName, String lastName) {
+		
+		HashMap<String, String> outputMap = new HashMap<>();
+		
+		try {
+			String sql = "INSERT INTO CUSTOMER_INFO (FirstName, LastName, EmailId) "
+					+ "VALUES (?, ?, ?)";
+			
+			jdbcTemplate.update(sql, firstName, lastName, emailId);
+			
+			outputMap.put("status", "true");
+			
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+			outputMap.put("status", "false");
+		}
+		return outputMap;
+	}
 }

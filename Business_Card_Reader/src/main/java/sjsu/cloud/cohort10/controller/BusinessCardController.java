@@ -140,11 +140,12 @@ public class BusinessCardController {
 	@ResponseBody
 	public Map<String, String> businessCardReferral(@RequestParam String referEmailId,
 			@RequestParam String firstName, @RequestParam String lastName, @RequestParam String contactName,
-			@RequestParam String contactEmailId, @RequestParam String organization, @RequestParam String contactNumber) {
+			@RequestParam String contactEmailId, @RequestParam String organization, 
+			@RequestParam String contactNumber, @RequestParam Integer id) {
     	Map<String, String> responseMap = null;
     	try {
    			responseMap = this.businessCardService.businessCardReferral(referEmailId, firstName, lastName, contactName,
-   					contactEmailId, organization, contactNumber);
+   					contactEmailId, organization, contactNumber, id);
    		} catch (Exception e) {
    			e.printStackTrace();
    		}
@@ -158,6 +159,20 @@ public class BusinessCardController {
     	Map<String, String> responseMap = null;
    		try {
    			responseMap = this.businessCardService.getBusinessCardUrls();
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
+   		return responseMap;
+   	}
+    
+    //Social login details update in DB
+    @RequestMapping(value = "/socialLoginUpdate", method = RequestMethod.POST, produces = "application/json")
+   	@ResponseBody
+   	public Map<String, String> socialLoginUpdate(@RequestParam String emailId,
+   			@RequestParam String firstName, @RequestParam String lastName) {
+    	Map<String, String> responseMap = null;
+   		try {
+   			responseMap = this.businessCardService.socialLoginUpdate(emailId, firstName, lastName);
    		} catch (Exception e) {
    			e.printStackTrace();
    		}

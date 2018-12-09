@@ -12,21 +12,19 @@ import com.amazonaws.services.simpleemail.model.Body;
 import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
-import com.amazonaws.services.simpleemail.model.VerifyEmailIdentityRequest;
-import com.amazonaws.services.simpleemail.model.VerifyEmailIdentityResult; 
+import com.amazonaws.services.simpleemail.model.SendEmailRequest; 
 
 
 @Component
 public class AWSSimpleEmailServiceHelper {
 	
 	public Map<String, String> businessCardReferral (String toEmail, String firstName, String lastName, String contactName,
-			String contactEmailId, String organization, String contactNumber)  {
+			String contactEmailId, String organization, String contactNumber, String cloudFrontUrl)  {
 		
 
 		HashMap<String, String> outputMap = new HashMap<>();
 		
-		String FROM = "BusinessCardDirectory@harshit-sjsu.com";
+		String FROM = "BusinessCardDirectory@www.sumanthravipati-sjsu.online";
 
 		String TO = toEmail;
 		
@@ -40,14 +38,15 @@ public class AWSSimpleEmailServiceHelper {
 		  		+ "Name: "+contactName+"\r\n"
 		  				+ "Email Id: "+contactEmailId+"\r\n"
 		  						+ "Contact: "+contactNumber+"\r\n"
-		  								+ "Organization: "+organization+"";
+		  								+ "Organization: "+organization+"\r\n"
+		  										+ "Download Card: "+cloudFrontUrl+"";
 		  
 		  try {
 		      AmazonSimpleEmailService client = 
 		          AmazonSimpleEmailServiceClientBuilder.standard()
 		          // Replace US_WEST_2 with the AWS Region you're using for
 		          // Amazon SES.
-		            .withRegion(Regions.US_EAST_1).build();
+		            .withRegion(Regions.US_WEST_2).build();
 		      SendEmailRequest request = new SendEmailRequest()
 		          .withDestination(
 		              new Destination().withToAddresses(TO))

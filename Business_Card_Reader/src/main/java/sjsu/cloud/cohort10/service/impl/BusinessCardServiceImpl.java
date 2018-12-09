@@ -159,16 +159,39 @@ public class BusinessCardServiceImpl implements BusinessCardService
 
 	@Override
 	public Map<String, String> businessCardReferral(String toEmail, String firstName, String lastName, String contactName,
-			String contactEmailId, String organization, String contactNumber) {
+			String contactEmailId, String organization, String contactNumber, Integer id) {
+		
+		//DB call to get the file name and users email id to delete the details from S3
+		BusinessCardOutput businessCardDetails = businessCardDAO.getFileDetailsBasedOnId(id);
+		
+		//logic to get the cloud front url from DB
+		Map<String, String> outputMapForUrl = businessCardDAO.getBusinessCardUrls();
+		
+		//code to set the cloud front url
+		String cloudFrontUrl = outputMapForUrl.get("CloudFrontUrl") + "/" + businessCardDetails.getEmailId() + 
+				"/" + businessCardDetails.getFileName();
 		
 		Map<String, String> outputMap = simpleEmailService.businessCardReferral(toEmail, firstName, lastName, contactName,
-					contactEmailId, organization, contactNumber);
+					contactEmailId, organization, contactNumber, cloudFrontUrl);
 		return outputMap;
 	}
 
 	@Override
 	public Map<String, String> getBusinessCardUrls() {
 		Map<String, String> outputMap = businessCardDAO.getBusinessCardUrls();
+		return outputMap;
+	}
+	
+	@Override
+	public Map<String, String> socialLoginUpdate(String emailId, String firstName, String lastName) {
+		
+		Map<String, String> outputMap = new HashMap<>();
+		
+		outputMap = businessCardDAO.getSocialUserDetails(emailId);
+		
+		if (outputMap.get("dbrecord").equalsIgnoreCase("error") || outputMap.get("emailid").equals(null)) {
+			outputMap = businessCardDAO.createSocialLoginUser(emailId, firstName, lastName);
+		}
 		return outputMap;
 	}
     

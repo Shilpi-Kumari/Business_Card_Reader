@@ -29,4 +29,8 @@ public interface BusinessCardDAO {
 	
 	Map<String, String> getBusinessCardUrls();
 	
+	Map<String, String> getSocialUserDetails(String emailId);
+	
+	Map<String, String> createSocialLoginUser(String emailId, String firstName, String lastName);
+	
 }
