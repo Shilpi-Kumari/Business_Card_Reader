@@ -184,12 +184,12 @@ function deleteContacts(id){
     });
 };
 
-function referContact(cardId,contactName,contactEmailId,organization,contactNumber){
+function referContact(id,contactName,contactEmailId,organization,contactNumber){
 	var contactName = decodeURIComponent(contactName);
 	var contactEmailId = decodeURIComponent(contactEmailId);
 	var organization = decodeURIComponent(organization);
 	var contactNumber = decodeURIComponent(contactNumber);
-	var id = decodeURIComponent(cardId);
+	var id = decodeURIComponent(id);
 	
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -235,6 +235,8 @@ function searchCard() {
 				var organization=encodeURIComponent(jsonData[i].organization);
 				var contactNumber=encodeURIComponent(jsonData[i].contactNumber);
 				var cardId=parseInt(jsonData[i].id,10);
+				var id = decodeURIComponent(id);
+				
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
 				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
@@ -244,7 +246,7 @@ function searchCard() {
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
 				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br>';
-				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ cardId +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
+				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ id +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
 				display_data += '</div>';
 				display_data += '</div>';
 			}
@@ -293,6 +295,8 @@ function display_table() {
 				organization=encodeURIComponent(jsonData[i].organization);
 				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
 				var cardId=parseInt(jsonData[i].id,10);
+				var id = decodeURIComponent(id);
+				
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
 				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
@@ -302,7 +306,7 @@ function display_table() {
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
 				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br';
-				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
+				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ id +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
 				display_data += '</div>';
 				display_data += '</div>';
 			}
