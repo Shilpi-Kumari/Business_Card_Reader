@@ -29,57 +29,7 @@
 
 <script>
 
-function searchCard() {
-	$('#spinner').show();
-	var userEmailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-	var searchType = document.getElementById('searchType').value;
-	var searchInput = document.getElementById('searchInput').value;
-	
-	$.ajax({
-		type: 'GET',
-		url: '/searchBusinessCard',
-		data: { userEmailId: userEmailId,searchType: searchType,searchInput: searchInput },
-		success: function (data) {
-			var jsonResponse = JSON.stringify(data);
-			var jsonData = JSON.parse(jsonResponse);
-			var display_data = "";
-			//alert(jsonResponse);
-			if(jsonData.length == 0)
-				{
-					document.getElementById('error').innerHTML="No cards found..!!!";
-					display_data = "";
-				}
-			else{
-			for (var i = 0; i < jsonData.length; i++) {
-				contactName=encodeURI(jsonData[i].contactName);
-				contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
-				organization=encodeURIComponent(jsonData[i].organization);
-				contactNumber=encodeURIComponent(jsonData[i].contactNumber);
-				var cardId=parseInt(jsonData[i].id,10);
-				display_data += '<div class="col-sm-4">';
-				display_data += '<div class="well">';
-				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
-				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
-				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
-				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
-				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
-				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
-				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br>';
-				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
-				display_data += '</div>';
-				display_data += '</div>';
-			}
-			//$('#t01').append(display_data);
-			}
-			document.getElementById('t01').innerHTML = display_data;
-			$('#spinner').hide();
-		},
-		error: function (error) {
-			var errorjson = JSON.stringify(error);
-			
-		}
-	});
-};
+
 
 function startDictation() {
     
@@ -246,6 +196,8 @@ function searchCard() {
 	var searchType = document.getElementById('searchType').value;
 	var searchInput = document.getElementById('searchInput').value;
 	var emailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var CloudFrontUrl = document.cookie.replace(/(?:(?:^|.*;\s*)CloudFrontUrl\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	
 	
 	$.ajax({
 		type: 'GET',
@@ -262,7 +214,7 @@ function searchCard() {
 				var organization=encodeURIComponent(jsonData[i].organization);
 				var contactNumber=encodeURIComponent(jsonData[i].contactNumber);
 				var fileName=encodeURIComponent(jsonData[i].fileName);
-				var cfurl="http://d2elsy7g2c4ken.cloudfront.net/"+emailId+"/"+decodeURIComponent(jsonData[i].fileName);
+				var cfurl=CloudFrontUrl+"/"+userEmailId+"/"+decodeURIComponent(jsonData[i].fileName);
 				var cardId=parseInt(jsonData[i].id,10);
 				var id = jsonData[i].id;
 				//alert(cfurl);
@@ -310,6 +262,7 @@ function display_table() {
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var emailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var CloudFrontUrl = document.cookie.replace(/(?:(?:^|.*;\s*)CloudFrontUrl\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	//document.getElementById('description').value="";
     //document.getElementById('file').value="";
 	document.getElementById("displayUser").innerHTML='Welcome ' + firstName +" "+lastName;
@@ -329,7 +282,7 @@ function display_table() {
 				var organization=encodeURIComponent(jsonData[i].organization);
 				var contactNumber=encodeURIComponent(jsonData[i].contactNumber);
 				var fileName=encodeURIComponent(jsonData[i].fileName);
-				var cfurl="http://d2elsy7g2c4ken.cloudfront.net/"+emailId+"/"+decodeURIComponent(jsonData[i].fileName);
+				var cfurl=CloudFrontUrl+"/"+emailId+"/"+decodeURIComponent(jsonData[i].fileName);
 				var cardId=parseInt(jsonData[i].id,10);
 				var id = jsonData[i].id;
 				//alert(cfurl);

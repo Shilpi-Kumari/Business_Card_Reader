@@ -213,6 +213,8 @@ function searchCard() {
 	var userEmailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var searchType = document.getElementById('searchType').value;
 	var searchInput = document.getElementById('searchInput').value;
+	//var CognitoID = document.cookie.replace(/(?:(?:^|.*;\s*)CognitoID\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var CloudFrontUrl = document.cookie.replace(/(?:(?:^|.*;\s*)CloudFrontUrl\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	
 	$.ajax({
 		type: 'GET',
@@ -237,9 +239,12 @@ function searchCard() {
 				var cardId=parseInt(jsonData[i].id,10);
 				var id = decodeURIComponent(id);
 				
+				var cfurl=CloudFrontUrl+"/"+userEmailId+"/"+decodeURIComponent(jsonData[i].fileName);
+				
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
-				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
+				display_data += '<div align="right"><a href="'+ cfurl +'" target="_blank"><i class="fa fa-download" style="font-size:30px;color:green"></i></a>';
+				display_data += '<a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
 				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
 				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
 				display_data += '<p>Mobile: ' + jsonData[i].contactNumber + '</p>';
@@ -276,6 +281,7 @@ function display_table() {
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var emailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var CloudFrontUrl = document.cookie.replace(/(?:(?:^|.*;\s*)CloudFrontUrl\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	//document.getElementById('description').value="";
     //document.getElementById('file').value="";
 	document.getElementById("displayUser").innerHTML='Welcome ' + firstName +" "+lastName;
@@ -299,6 +305,7 @@ function display_table() {
 				
 				display_data += '<div class="col-sm-4">';
 				display_data += '<div class="well">';
+				display_data += '<div align="right"><a href="'+ CloudFrontUrl +'" target="_blank"><i class="fa fa-download" style="font-size:30px;color:green"></i></a>';
 				display_data += '<div align="right"><a href=javascript:void(0) onClick=deleteContacts('+ cardId +')><i class="fa fa-trash" style="font-size:30px;color:red"></i></a></div>';
 				display_data += '<p>Contact Name: ' + jsonData[i].contactName + '<p>';
 				display_data += '<p>Email: ' + jsonData[i].contactEmailId + '</p>';
@@ -328,6 +335,16 @@ $(document).ready(function () {
     //document.getElementById('file').value="";
 	document.getElementById("displayUser").innerHTML='Welcome ' + firstName +" "+lastName;
 	//display_table()
+	
+	$.ajax({
+        url: "/getBusinessCardUrls",
+        type: 'GET',
+        success :function(data) {
+        	var jsonResponse = JSON.stringify(data);
+        	document.cookie="CloudFrontUrl="+data.CloudFrontUrl;
+        	document.cookie="CognitoID="+data.CognitoID;
+       }
+    });
 });
 
 $(function() {

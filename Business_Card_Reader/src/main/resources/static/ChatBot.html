@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+	<script src="https://apis.google.com/js/client.js"></script>
+<style>
+
+/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 150%;
+    }
+        
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+</style>
+<title>Business Card Application</title>
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.41.0.min.js"></script>
+        <style language="text/css">
+            input#giveinput {
+                padding: 4px;
+                font-size: 1em;
+                width: 460px
+            }
+        
+        input::placeholder {
+            color: #ccc;
+            font-style: italic;
+        }
+        
+        p.userRequest {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            min-width: 50%;
+            max-width: 85%;
+            float: left;
+            background-color: #CCD1D1;
+        }
+        
+        p.lexResponse {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            text-align: right;
+            min-width: 45%;
+            max-width: 90%;
+            float: right;
+            background-color: #0FA2C9;
+            font-style: italic;
+        }
+        
+        p.lexError {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            text-align: right;
+            min-width: 50%;
+            max-width: 85%;
+            float: right;
+            background-color: #f77;
+        }
+ </style>
+
+
+</head>
+<body>
+
+<script>
+$(document).ready(function () {
+	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	var emailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	//document.getElementById('description').value="";
+    //document.getElementById('file').value="";
+	document.getElementById("displayUser").innerHTML='Welcome ' + firstName +" "+lastName;
+	var chatBotText = document.cookie.replace(/(?:(?:^|.*;\s*)chatBotText\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	//alert(chatBotText);
+	document.getElementById('giveinput').value = chatBotText;
+	$("#chatform").submit();
+});
+
+function startDictation() {
+    
+    if (window.hasOwnProperty('webkitSpeechRecognition')) {
+        
+        var recognition = new webkitSpeechRecognition();
+        
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        
+        recognition.lang = "en-US";
+        recognition.start();
+        
+        recognition.onresult = function(e) {
+            document.getElementById('transcript').value
+            = e.results[0][0].transcript;
+            recognition.stop();
+            var x = document.getElementById("myAudio");
+            var count = 0;
+            
+            x.play();
+            
+            while(count<2500000000)
+            {
+                count++;
+            }
+            
+            if (document.getElementById('transcript').value
+                == "get my contacts")
+                {
+                    document.getElementById('labnol').submit();
+                }
+            else{
+            	document.getElementById('labnol').submit();
+            }
+        };
+        
+        recognition.onerror = function(e) {
+            recognition.stop();
+        }
+        
+    }
+}
+
+
+
+	
+
+
+function logout(){
+	//var account_id = document.cookie.replace(/(?:(?:^|.*;\s*)account_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+	document.cookie = "firstName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "lastName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "emailId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	//document.cookie = "account_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	//document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+};
+
+
+
+</script>
+
+<nav class="navbar navbar-inverse visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+      
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Dashboard</a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav hidden-xs">
+      <h3>Business Card Directory</h3>
+      <div align='left'><span style="font-size:150%" id='displayUser'></span></div>
+      <ul class="nav nav-pills nav-stacked"><br>
+        <li><a href="Home1.html">Dashboard</a></li>
+     
+        <li><a href="ListCards.html">List of Cards</a></li>
+        
+        <li><a href=index.html onClick=logout()>
+          <span class="glyphicon glyphicon-log-out"></span> Log out
+	 </a></li>
+      </ul><br>
+    </div>
+    <br>
+    
+    <div class="col-sm-9">
+      <div class="well">
+ 
+	 <h1 style="text-align:  left">Schedule a meeting:</h1>
+      </div>
+      <div class="row" id="t01">
+       
+        <p style="width: 400px">
+        </p>
+        <div id="chatbot" style="width: 460px; height: 440px; border: 1px solid #ccc; background-color: #eee; padding: 4px; overflow: scroll"></div>
+        <form id="chatform" style="margin-top: 10px" onsubmit="return pushChat();">
+            <input type="text" id="giveinput" size="80" value="" placeholder="I want to schedule meeting">
+                </form>
+        <script type="text/javascript">
+            // set the focus to the input box
+            document.getElementById("giveinput").focus();
+            var CognitoID = document.cookie.replace(/(?:(?:^|.*;\s*)CognitoID\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            // Initialize the Amazon Cognito credentials provider
+            AWS.config.region = 'us-east-1'; // Region
+            AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+                                                                        // Provide your Pool Id here
+                                                                        IdentityPoolId: CognitoID,
+                                                                        });
+                                                                        
+                                                                        var lexruntime = new AWS.LexRuntime();
+                                                                        var lexUserId = 'chatbot-demo' + Date.now();
+                                                                        var sessionAttributes = {};
+                                                                        
+                                                                        function pushChat() {
+                                                                            
+                                                                            // if there is text to be sent...
+                                                                            var giveinputext = document.getElementById('giveinput');
+                                                                            if (giveinputext && giveinputext.value && giveinputext.value.trim().length > 0) {
+                                                                                
+                                                                                // disable input to show we're sending it
+                                                                                var giveinput = giveinputext.value.trim();
+                                                                                giveinputext.value = '...';
+                                                                                giveinputext.locked = true;
+                                                                                
+                                                                                // send it to the Lex runtime
+                                                                                var params = {
+                                                                                    botAlias: '$LATEST',
+                                                                                    botName: 'Project_Chatbot',
+                                                                                    inputText: giveinput,
+                                                                                    userId: lexUserId,
+                                                                                    sessionAttributes: sessionAttributes
+                                                                                };
+                                                                                showRequest(giveinput);
+                                                                                lexruntime.postText(params, function(err, data) {
+                                                                                                    if (err) {
+                                                                                                    console.log(err, err.stack);
+                                                                                                    showError('Error:  ' + err.message + ' (see console for details)')
+                                                                                                    }
+                                                                                                    if (data) {
+                                                                                                    // capture the sessionAttributes for the next cycle
+                                                                                                    sessionAttributes = data.sessionAttributes;
+                                                                                                    // show response and/or error/dialog status
+                                                                                                    showResponse(data);
+                                                                                                    }
+                                                                                                    // re-enable input
+                                                                                                    giveinputext.value = '';
+                                                                                                    giveinputext.locked = false;
+                                                                                                    });
+                                                                            }
+                                                                            // we always cancel form submission
+                                                                            return false;
+                                                                        }
+        
+        function showRequest(daText) {
+            
+            var chatbotplace = document.getElementById('chatbot');
+            var replylex = document.createElement("P");
+            replylex.className = 'userRequest';
+            replylex.appendChild(document.createTextNode(daText));
+            chatbotplace.appendChild(replylex);
+            chatbotplace.scrollTop = chatbotplace.scrollHeight;
+        }
+        
+        function showError(daText) {
+            
+            var chatbotplace = document.getElementById('chatbot');
+            var errorrequest = document.createElement("P");
+            errorrequest.className = 'lexError';
+            errorrequest.appendChild(document.createTextNode(daText));
+            chatbotplace.appendChild(errorrequest);
+            chatbotplace.scrollTop = chatbotplace.scrollHeight;
+        }
+        
+        function showResponse(lexResponse) {
+            
+            var chatbotplace = document.getElementById('chatbot');
+            var lexresponse = document.createElement("P");
+            lexresponse.className = 'lexResponse';
+            if (lexResponse.message) {
+                lexresponse.appendChild(document.createTextNode(lexResponse.message));
+                lexresponse.appendChild(document.createElement('br'));
+            }
+             if (lexResponse.dialogState === 'ReadyForFulfillment') {
+                lexresponse.appendChild(document.createTextNode(
+                                                                 'Ready for fulfillment'));
+                                                                 // TODO:  show slot values
+            } else {
+                //responsePara.appendChild(document.createTextNode(
+                                                           //      '(' + "" + ')'));
+            }
+            chatbotplace.appendChild(lexresponse);
+            chatbotplace.scrollTop = chatbotplace.scrollHeight;
+        }
+        </script>
+      </div>
+   
+    </div>
+  </div>
+</div>
+</body>
+</html>

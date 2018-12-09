@@ -11,10 +11,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <script src="https://apis.google.com/js/platform.js" async defer></script>
-<meta name="google-signin-client_id" content="759502544649-7cqesj7s0fmgh0346882ffel5b1oe2j6.apps.googleusercontent.com">
+<meta name="google-signin-client_id" content="759502544649-cqsan6i4i4eallb0tqmvp4muov0pc2e6.apps.googleusercontent.com">
 
 <script type="text/javascript" src="//platform.linkedin.com/in.js">
-    api_key: 86r9prb5grcsgw
+    api_key: 860kt5ba3a5ikf	
     onLoad: onLinkedInLoad
 </script>
 
@@ -166,17 +166,17 @@ function onSignIn(googleUser) {
 	if(googleLogged){
 		var profile = googleUser.getBasicProfile();
 		  $.ajax({
-	          url: "social/login",
+	          url: "/socialLoginUpdate",
 	          type: 'POST',
-	      	  data: jQuery.param({ 'emailId': profile.getEmail(), 'fname' : profile.getGivenName(), 'lname' : profile.getFamilyName()}),
+	      	  data: jQuery.param({ 'emailId': profile.getEmail(), 'firstName' : profile.getGivenName(), 'lastName' : profile.getFamilyName()}),
 	          success :function(data) {
 	              var json = JSON.stringify(data);
 	              if(data.status=="true"){
-	              	document.cookie="firstname="+data.fname;
-	              	document.cookie="lastname="+data.lname;
-	                	document.cookie="account_id="+data.account_id;
-	                	document.cookie="emailId="+data.emailId;
-	                	document.cookie="role="+data.role; 
+	              	document.cookie="firstName="+profile.getGivenName();
+	              	document.cookie="lastName="+profile.getFamilyName();
+	                	
+	                	document.cookie="emailId="+profile.getEmail();
+	                	
 	                	window.location.href = "/Home1.html";
 	              }
 	         }
@@ -211,6 +211,7 @@ $(function() {
             data: JSON.stringify(userLoginRequest),
             success :function(data) {
                 var json = JSON.stringify(data);
+                //alert(json);
                 if(data.status=="true"){
                 	document.cookie="firstName="+data.firstname;
                 	document.cookie="lastName="+data.lastname;
@@ -281,17 +282,16 @@ function facebookLogin() {
     FB.api('/me', { locale: 'en_US', fields: 'first_name,last_name,email' }, function(response) {
      // alert('Thanks for logging in, ' + response.first_name + '!' + JSON.stringify(response)  + '!');
     	$.ajax({
-	          url: "social/login",
+	          url: "/socialLoginUpdate",
 	          type: 'POST',
-	      	  data: jQuery.param({ 'emailId': response.email, 'fname' : response.first_name, 'lname' : response.last_name}),
+	      	  data: jQuery.param({ 'emailId': response.email, 'firstName' : response.first_name, 'lastName' : response.last_name}),
 	          success :function(data) {
 	              var json = JSON.stringify(data);
 	              if(data.status=="true"){
-	              	document.cookie="firstname="+data.fname;
-	              	document.cookie="lastname="+data.lname;
-	                	document.cookie="account_id="+data.account_id;
-	                	document.cookie="emailId="+data.emailId;
-	                	document.cookie="role="+data.role; 
+	              	document.cookie="firstName="+response.first_name;
+	              	document.cookie="lastName="+response.last_name;
+	                	document.cookie="emailId="+response.email;
+	                	
 	                	window.location.href = "/Home1.html";
 	              }
 	         }
@@ -308,17 +308,17 @@ function onLinkedInLoad() {
 function onSuccess(data) {
 	user = data.values[0];
 	$.ajax({
-        url: "social/login",
+        url: "/socialLoginUpdate",
         type: 'POST',
-    	  data: jQuery.param({ 'emailId': user.emailAddress, 'fname' : user.firstName, 'lname' : user.lastName}),
+    	  data: jQuery.param({ 'emailId': user.emailAddress, 'firstName' : user.firstName, 'lastName' : user.lastName}),
         success :function(data) {
             var json = JSON.stringify(data);
+          //  alert(json);
             if(data.status=="true"){
-            	document.cookie="firstname="+data.fname;
-            	document.cookie="lastname="+data.lname;
-              	document.cookie="account_id="+data.account_id;
-              	document.cookie="emailId="+data.emailId;
-              	document.cookie="role="+data.role; 
+            	document.cookie="firstName="+user.firstName;
+            	document.cookie="lastName="+user.lastName;	
+              	document.cookie="emailId="+user.emailAddress;
+              	
               	window.location.href = "/Home1.html";
             }
        }
