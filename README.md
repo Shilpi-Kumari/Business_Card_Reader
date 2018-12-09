@@ -80,4 +80,17 @@ User can Logout using the logout button.
 ### Sample Screenshots:
 
 - Login Page
-![loginpage]<img width="1438" alt="screen shot 2018-12-08 at 7 59 56 pm" src="https://user-images.githubusercontent.com/42687329/49693343-b9d5ef80-fb24-11e8-9f2c-3e0ba8125546.png">
+<img width="1438" alt="screen shot 2018-12-08 at 7 59 56 pm" src="https://user-images.githubusercontent.com/42687329/49693343-b9d5ef80-fb24-11e8-9f2c-3e0ba8125546.png">
+
+- Home Page:
+<img width="1440" alt="screen shot 2018-12-08 at 8 01 00 pm" src="https://user-images.githubusercontent.com/42687329/49693349-ef7ad880-fb24-11e8-9b8c-7bf80f19351e.png">
+
+- Upload Card:
+
+- Search Card:
+
+-List of Cards:
+
+- Chatbot to schedule a meeting:
+<img width="1338" alt="1" src="https://user-images.githubusercontent.com/42687329/49693366-59937d80-fb25-11e8-9889-a70e10e87941.png">
+
