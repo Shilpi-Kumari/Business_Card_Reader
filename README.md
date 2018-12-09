@@ -7,6 +7,7 @@
 - ISA: [Anushri Srinath Aithal](https://www.linkedin.com/in/anushri-aithal/)<br>
 - Student: [Shilpi Kumari](www.linkedin.com/in/shilpi-kumari-58764a64)
 - Student: [Sumanth Ravipati](https://www.linkedin.com/in/sumanth-ravipati)
+- Student: [Harshit Nagpal](https://www.linkedin.com/in/harshit-nagpal)
 
 ## Project Introduction<br>
 
