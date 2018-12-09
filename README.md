@@ -8,6 +8,7 @@
 - Student: [Shilpi Kumari](www.linkedin.com/in/shilpi-kumari-58764a64)
 - Student: [Sumanth Ravipati](https://www.linkedin.com/in/sumanth-ravipati)
 - Student: [Harshit Nagpal](https://www.linkedin.com/in/harshit-nagpal)
+- Student: [Sai Kiran Pothana](https://www.linkedin.com/in/saikiran-pothana)
 
 ## Project Introduction<br>
 
