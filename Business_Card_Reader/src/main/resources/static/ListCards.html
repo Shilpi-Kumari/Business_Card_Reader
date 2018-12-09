@@ -216,12 +216,12 @@ function deleteContacts(id){
     });
 };
 
-function referContact(contactName,contactEmailId,organization,contactNumber){
+function referContact(cardId,contactName,contactEmailId,organization,contactNumber){
 	var contactName = decodeURIComponent(contactName);
 	var contactEmailId = decodeURIComponent(contactEmailId);
 	var organization = decodeURIComponent(organization);
 	var contactNumber = decodeURIComponent(contactNumber);
-	var cardId = decodeURIComponent(cardId);
+	var id = decodeURIComponent(cardId);
 	
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -231,7 +231,7 @@ function referContact(contactName,contactEmailId,organization,contactNumber){
 	$.ajax({
         url: "/businessCardReferral",
         type: 'POST',
-        data: { cardId: cardId,firstName: firstName,lastName: lastName,referEmailId: referEmailId,contactName: contactName,contactEmailId: contactEmailId, organization: organization,contactNumber: contactNumber },
+        data: { id: id,firstName: firstName,lastName: lastName,referEmailId: referEmailId,contactName: contactName,contactEmailId: contactEmailId, organization: organization,contactNumber: contactNumber },
         success :function(data) {
         document.getElementById('error').innerHTML="Card has been referred succefully!!";
           display_table();
