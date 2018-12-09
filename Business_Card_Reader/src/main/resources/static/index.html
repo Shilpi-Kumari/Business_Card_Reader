@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="759502544649-cqsan6i4i4eallb0tqmvp4muov0pc2e6.apps.googleusercontent.com">
+
+<script type="text/javascript" src="//platform.linkedin.com/in.js">
+    api_key: 860kt5ba3a5ikf	
+    onLoad: onLinkedInLoad
+</script>
+
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+ <!-- background: url(background.jpeg);-->
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* style the container */
+.container {
+  position: relative;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px 0 30px 0;
+  height:300px;
+  width: 60%;
+} 
+
+/* style inputs and link buttons */
+input,
+.btn {
+  width: 70%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none; /* remove underline from anchors */
+}
+
+input:hover,
+.btn:hover {
+  opacity: 1;
+}
+
+/* add appropriate colors to fb, twitter and google buttons */
+.fb {
+  background-color: #3B5998;
+  color: white;
+}
+
+
+.google {
+  background-color: #dd4b39;
+  color: white;
+}
+
+/* style the submit button */
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+/* Two-column layout*/
+.col {
+  float: left;
+  width: 50%;
+  margin: auto;
+  padding: 0 50px;
+  margin-top: 6px;
+}
+.col1 {
+  float: left;
+  width: 100%;
+  margin: auto;
+  padding: 0 50px;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* vertical line */
+.vl {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  border: 2px solid #ddd;
+  height: 175px;
+}
+
+/* text inside the vertical line */
+.vl-innertext {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  padding: 8px 10px;
+}
+
+/* hide some text on medium and large screens */
+.hide-md-lg {
+  display: none;
+}
+
+/* bottom container */
+.bottom-container {
+  text-align: center;
+  background-color: #666;
+  border-radius: 0px 0px 4px 4px;
+  height:55px;
+  width: 60%;
+}
+
+/* Responsive layout - when the screen is less than 650px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 650px) {
+  .col {
+    width: 100%;
+    margin-top: 0;
+  }
+  /* hide the vertical line */
+  .vl {
+    display: none;
+  }
+  /* show the hidden text on small screens */
+  .hide-md-lg {
+    display: block;
+    text-align: center;
+  }
+}
+</style>
+</head>
+
+<body>
+<script> 
+var googleLogged = false;
+function onSignIn(googleUser) {
+	if(googleLogged){
+		var profile = googleUser.getBasicProfile();
+		  $.ajax({
+	          url: "/socialLoginUpdate",
+	          type: 'POST',
+	      	  data: jQuery.param({ 'emailId': profile.getEmail(), 'firstName' : profile.getGivenName(), 'lastName' : profile.getFamilyName()}),
+	          success :function(data) {
+	              var json = JSON.stringify(data);
+	              if(data.status=="true"){
+	              	document.cookie="firstName="+profile.getGivenName();
+	              	document.cookie="lastName="+profile.getFamilyName();
+	                	
+	                	document.cookie="emailId="+profile.getEmail();
+	                	
+	                	window.location.href = "/Home1.html";
+	              }
+	         }
+	      });
+	}else{
+		googleSignOut();
+	}	
+}
+
+function googleSignOut(){
+	 var auth2 = gapi.auth2.getAuthInstance();
+	    auth2.signOut().then(function () {
+	   });   
+}
+
+function clickGoogleLogin(){
+	googleLogged = true;
+}
+
+$(function() {
+    $("#login").submit(function(e) {
+    	e.preventDefault();
+    	var userLoginRequest = {
+    			"emailId": $('#emailId').val(),
+    			"password": $('#password').val()
+    	}
+        $.ajax({
+            url: "/userLogin",
+            type: 'POST',
+            dataType: 'json',
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify(userLoginRequest),
+            success :function(data) {
+                var json = JSON.stringify(data);
+                //alert(json);
+                if(data.status=="true"){
+                	document.cookie="firstName="+data.firstname;
+                	document.cookie="lastName="+data.lastname;
+                  	document.cookie="emailId="+data.emailid;
+                  	window.location.href = "Home1.html";
+                }
+                else{
+                	document.getElementById('error').innerHTML="User does not exist";
+                	document.getElementById('emailId').value="";
+                	document.getElementById('password').value="";
+                }
+           },
+           error: function(error){
+         	  var errorjson = JSON.stringify(error); 
+               alert("Invalid Username/password");            	  
+           }
+        });
+    });
+});
+
+function fbSignOut(){
+	  FB.logout(function(response) {
+		   // Person is now logged out
+		});  
+}
+ 
+	
+// This is called with the results from from FB.getLoginStatus().
+function statusChangeCallback(response) {
+  console.log('statusChangeCallback');
+  console.log(response);
+  if (response.status === 'connected') {
+    facebookLogin();
+  } else {
+    // The person is not logged into your app or we are unable to tell.
+    document.getElementById('status').innerHTML = 'Please log ' +
+      'into this app.';
+  }
+}
+
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+}
+
+
+window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '292779904688346',
+      cookie     : false,  // enable cookies to allow the server to access 
+                          // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.8' // use graph api version 2.8
+    });
+  };
+
+//Load the SDK asynchronously
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "https://connect.facebook.net/en_US/sdk.js";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+function facebookLogin() {
+    FB.api('/me', { locale: 'en_US', fields: 'first_name,last_name,email' }, function(response) {
+     // alert('Thanks for logging in, ' + response.first_name + '!' + JSON.stringify(response)  + '!');
+    	$.ajax({
+	          url: "/socialLoginUpdate",
+	          type: 'POST',
+	      	  data: jQuery.param({ 'emailId': response.email, 'firstName' : response.first_name, 'lastName' : response.last_name}),
+	          success :function(data) {
+	              var json = JSON.stringify(data);
+	              if(data.status=="true"){
+	              	document.cookie="firstName="+response.first_name;
+	              	document.cookie="lastName="+response.last_name;
+	                	document.cookie="emailId="+response.email;
+	                	
+	                	window.location.href = "/Home1.html";
+	              }
+	         }
+	      });
+    });
+}
+
+// Setup an event listener to make an API call once auth is complete
+function onLinkedInLoad() {
+    IN.Event.on(IN, "auth", getProfileData);
+}
+
+// Handle the successful return from the API call
+function onSuccess(data) {
+	user = data.values[0];
+	$.ajax({
+        url: "/socialLoginUpdate",
+        type: 'POST',
+    	  data: jQuery.param({ 'emailId': user.emailAddress, 'firstName' : user.firstName, 'lastName' : user.lastName}),
+        success :function(data) {
+            var json = JSON.stringify(data);
+          //  alert(json);
+            if(data.status=="true"){
+            	document.cookie="firstName="+user.firstName;
+            	document.cookie="lastName="+user.lastName;	
+              	document.cookie="emailId="+user.emailAddress;
+              	
+              	window.location.href = "/Home1.html";
+            }
+       }
+    });
+}
+
+// Handle an error response from the API call
+function onError(error) {
+    console.log(error);
+}
+
+// Use the API call wrapper to request the member's basic profile data
+function getProfileData() {
+	IN.API.Profile("me").fields("first-name", "last-name", "email-address").result(onSuccess).error(onError);
+}
+
+</script>
+<form id="login" method="post" enctype='application/json'>
+<div align='center'>
+<h2 align=center style="color:black;font-family:courier;font-size:300%;">Welcome To Business Card Directory</h2>	
+	<div class="container">
+    <div class="row">
+      <h2 style="text-align:center">Login with your Social or Business Card Directory</h2>
+      <div class="vl">
+        <span class="vl-innertext">or</span>
+      </div>
+
+      <div class="col">
+      <br>
+       <div class="fb-login-button" scope="public_profile,email" onlogin="checkLoginState();"></div>
+       <br><br>
+       <div class="g-signin2" onclick="clickGoogleLogin()" data-onsuccess="onSignIn"></div>
+       <br>
+       <div><script type="in/Login"></script></div>
+      </div>
+	<p id='error' style="color:red;"></p>
+      <div class="col">
+        <input type="text" name="emailId" id="emailId" placeholder="Email Id" required>
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+      </div>
+      
+    </div>
+  
+</div>
+
+<div class="bottom-container">
+  <div class="row">
+    <div class="col1" align='center'>
+     <a href="/SignUp.html" style="color:white" class="btn">New User? Sign up here</a>
+    </div>
+  </div>
+</div>
+</div>
+</form>
+</body>
+
+</html>
