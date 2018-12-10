@@ -171,12 +171,12 @@ function referContact(id,contactName,contactEmailId,organization,contactNumber){
 	var contactEmailId = decodeURIComponent(contactEmailId);
 	var organization = decodeURIComponent(organization);
 	var contactNumber = decodeURIComponent(contactNumber);
-	var id = decodeURIComponent(id);
+	//alert(id);
 	
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var referEmailId=document.getElementById('referEmailId').value;
-	//alert(contactName);
+	alert(referEmailId);
 	$('#spinner').show();
 	$.ajax({
         url: "/businessCardReferral",
@@ -184,7 +184,7 @@ function referContact(id,contactName,contactEmailId,organization,contactNumber){
         data: { id: id,firstName: firstName,lastName: lastName,referEmailId: referEmailId,contactName: contactName,contactEmailId: contactEmailId, organization: organization,contactNumber: contactNumber },
         success :function(data) {
         document.getElementById('error').innerHTML="Card has been referred succefully!!";
-          display_table();
+         // display_table();
           $('#spinner').hide();
        }
     });
@@ -197,7 +197,7 @@ function searchCard() {
 	var searchInput = document.getElementById('searchInput').value;
 	var emailId = document.cookie.replace(/(?:(?:^|.*;\s*)emailId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var CloudFrontUrl = document.cookie.replace(/(?:(?:^|.*;\s*)CloudFrontUrl\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-	
+	document.getElementById('error').innerHTML="";
 	
 	$.ajax({
 		type: 'GET',
@@ -208,6 +208,12 @@ function searchCard() {
 			var jsonData = JSON.parse(jsonResponse);
 			//alert(jsonResponse);
 			var display_data = "";
+			if(jsonData.length == 0)
+			{
+				document.getElementById('error').innerHTML="No cards found..!!!";
+				display_data = "";
+			}
+		else{
 			for (var i = 0; i < jsonData.length; i++) {
 				var contactName=encodeURI(jsonData[i].contactName);
 				var contactEmailId=encodeURIComponent(jsonData[i].contactEmailId);
@@ -234,6 +240,7 @@ function searchCard() {
 				display_data += '</div>';
 			}
 			//$('#t01').append(display_data);
+		}
 			document.getElementById('t01').innerHTML = display_data;
 			$('#spinner').hide();
 		},
