@@ -7,6 +7,8 @@
 - ISA: [Anushri Srinath Aithal](https://www.linkedin.com/in/anushri-aithal/)<br>
 - Student: [Shilpi Kumari](www.linkedin.com/in/shilpi-kumari-58764a64)
 - Student: [Sumanth Ravipati](https://www.linkedin.com/in/sumanth-ravipati)
+- Student: [Harshit Nagpal](https://www.linkedin.com/in/harshit-nagpal)
+- Student: [Sai Kiran Pothana](https://www.linkedin.com/in/saikiran-pothana)
 
 ## Project Introduction<br>
 
@@ -32,6 +34,10 @@ This will be a 3-tier web application using AWS resources for managing the visit
 User can Logout using the logout button.
 
 ### Architecture Diagram:
+
+<img width="1110" alt="ad" src="https://user-images.githubusercontent.com/42687329/49693535-77171600-fb2a-11e8-8826-30fe8b3973ac.png">
+
+
 ### AWS Services Used:
 1. Elastic Beanstalk: To provide the deployment environment for our application to run. Enables EC2 instances. Just need to configure the Capacity settings for auto scaling group and load balancing. Application uses two elastic beanstalk environment to support CI/CD Integration with our application- one for Production and other for Development .
 2. Code Pipeline: To provide the CI/CD Integration with our application, we used two Code Pipelines. One for Development Environment and other for Production Environment. Manual Approval is required in the Production Environment to reflect the changes.
@@ -57,7 +63,6 @@ User can Logout using the logout button.
 2> Lambda function with the associated IAM role
 3> Elasticbeanstalk environment and application                            
 4> Auto Scaling group
-
 21. Cloud Trail –  Used to keep track of the activities and the API accessed for our account.
 22.Route53: Domain Name Server that resolves IP address for the application domain www.sumanthravipati-sjsu.online.
 23. AWS Certificate Manger: Used to issue the TSL/SSL Certificate for our domain to enable the https request to provide the encryption of the data in transit.
@@ -78,6 +83,7 @@ User can Logout using the logout button.
 5) Right click on project folder and Run as maven install
 6) Right Click on project folder and Run as Spring Boot App
 7) Open browser and provide https://localhost:portnumber
+
 ### Sample Screenshots:
 
 - Login Page
@@ -89,8 +95,9 @@ User can Logout using the logout button.
 - Upload Card:
 
 - Search Card:
+<img width="1440" alt="screen shot 2018-12-08 at 8 49 07 pm" src="https://user-images.githubusercontent.com/42687329/49693546-c0fffc00-fb2a-11e8-80d3-fbcef2b10979.png">
 
--List of Cards:
+- List of Cards:
 
 - Chatbot to schedule a meeting:
 <img width="1338" alt="1" src="https://user-images.githubusercontent.com/42687329/49693366-59937d80-fb25-11e8-9889-a70e10e87941.png">
