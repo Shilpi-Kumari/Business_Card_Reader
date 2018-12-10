@@ -184,7 +184,7 @@ function deleteContacts(id){
     });
 };
 
-function referContact(id,contactName,contactEmailId,organization,contactNumber){
+function referContact(i,id,contactName,contactEmailId,organization,contactNumber){
 	var contactName = decodeURIComponent(contactName);
 	var contactEmailId = decodeURIComponent(contactEmailId);
 	var organization = decodeURIComponent(organization);
@@ -192,8 +192,9 @@ function referContact(id,contactName,contactEmailId,organization,contactNumber){
 	
 	var firstName = document.cookie.replace(/(?:(?:^|.*;\s*)firstName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 	var lastName = document.cookie.replace(/(?:(?:^|.*;\s*)lastName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-	var referEmailId=document.getElementById('referEmailId').value;
-	//alert(referEmailId);
+	//var a=document.getElementById('referEmailId').value;
+	var a=document.getElementsByName("referEmailId");
+	var referEmailId=a[i].value;
 	$('#spinner').show();
 	$.ajax({
         url: "/businessCardReferral",
@@ -251,7 +252,7 @@ function searchCard() {
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
 				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br>';
-				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ id +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
+				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ i +'","'+ id +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
 				display_data += '</div>';
 				display_data += '</div>';
 			}
@@ -313,7 +314,7 @@ function display_table() {
 				display_data += '<p>Organization: ' + jsonData[i].organization + '</p>';
 				display_data += '<p>Comments: ' + jsonData[i].fileDescription + '</p>';
 				display_data += '<button onClick=addContacts("'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Add Contact To Google</button><br><br';
-				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ id +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
+				display_data += '<input type="text" name="referEmailId" id="referEmailId" placeholder="Email Id"><button onClick=referContact("'+ i +'","'+ id +'","'+ contactName +'","'+ contactEmailId +'","'+ organization +'","'+ contactNumber +'")>Refer Contact</button>';
 				display_data += '</div>';
 				display_data += '</div>';
 			}
